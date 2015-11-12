@@ -5,17 +5,36 @@
  */
 package sniper;
 
-/**
- *
- * @author kamil
- */
-public class Sniper {
+import java.awt.EventQueue;
+import javax.swing.JFrame;
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
+
+public class Sniper extends JFrame {
     
+    public Sniper() {
+
+        initUI();
+    }
+
+    private void initUI() {
+
+        add(new Board());
+
+        setSize(640, 480);
+
+        setTitle("Sniper");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+    }    
+    
+    public static void main(String[] args) {
+        
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Sniper ex = new Sniper();
+                ex.setVisible(true);
+            }
+        });
+    }
 }
