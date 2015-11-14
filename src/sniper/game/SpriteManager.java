@@ -1,4 +1,4 @@
-package sniper;
+package sniper.game;
  
 import java.util.*;
  

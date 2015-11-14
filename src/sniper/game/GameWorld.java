@@ -1,4 +1,4 @@
-package sniper;
+package sniper.game;
  
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
