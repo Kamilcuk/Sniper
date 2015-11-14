@@ -17,8 +17,35 @@
  */
 package sniper;
 
-public class Sniper {
-    public static void main(String args[]) {   
-        new Game().run();
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+/**
+ * Klasa odpowiadająca za gre 2D jako taką
+ * tworzy okno, interface, zarządza obiektami
+ * @author Kamil Cukrowski
+ */
+public class Game extends Application {
+	
+	GameWorld gameWorld = new SniperWorld1();
+	
+	public void run() {
+        javafx.application.Application.launch(Game.class);
+	}
+	
+    /**
+    * Startuje grę
+	*/
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        // setup title, scene, stats, controls, and actors.
+        gameWorld.initialize(primaryStage);
+
+        // kick off the game loop
+        gameWorld.beginGameLoop();
+
+        // display window
+        primaryStage.show();       
     }
+	
 }
