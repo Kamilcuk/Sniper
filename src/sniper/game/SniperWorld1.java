@@ -17,13 +17,11 @@
  */
 package sniper.game;
 
-import java.util.ArrayList;
-import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -59,10 +57,12 @@ public class SniperWorld1 extends GameWorld {
 		getSceneNodes().getChildren().add(0, bg);
 		
 		// player
-		Player player = new Player(primaryStage);
-		getSpriteManager().addSprites(player);
-		getSceneNodes().getChildren().add(1, player.node);
-		
+		Player player = new Player(primaryStage,
+				new Point2D(
+					getGameSurface().getHeight(),
+					getGameSurface().getWidth()
+				));
+		addSprites(player);
 	}
 	
 	@Override

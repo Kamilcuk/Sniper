@@ -19,13 +19,15 @@ package sniper.game;
 
 import java.util.ArrayList;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javax.swing.event.DocumentEvent;
 
 
 /**
@@ -33,36 +35,40 @@ import javax.swing.event.DocumentEvent;
  * @author Kamil Cukrowski
  */
 public class Player extends Sprite {
-	private final ImageView obraz;
-	private final Stage primaryStage;
-	private final ArrayList<String> input;
+	private final ImageView obraz = new ImageView();
+	private final ArrayList<String> input = new ArrayList<>();
 	private final double rotateOffsetX, rotateOffsetY;
+	private final Bron bron = new Bron();
 	
-	private int speed = 6;
-	private double mouseX, mouseY;
+	private Group myGroup = new Group();
 	private MouseButton mouseButton;
+	private double mouseX, mouseY;
+	
+	/*  config */
+	private final int playerSpeed = 2;
+	private final int imageSize = 50;
 	
 	/**
 	 * Konstruktor objekty player
-	 * @param stage objekt stage jest potrzebny do zinicjalizowania 
-	 *				wejść klaiwatury i myszy
+	 * @param _gameWorld gameWorld object
 	 */
-	public Player(final Stage stage) {
-		input = new ArrayList<>();
-		primaryStage = stage;
-		obraz = new ImageView();
-		obraz.setImage(new Image("File:resources\\weapon\\AK-47\\player.png"));
-		obraz.setTranslateX(0);
-		obraz.setTranslateY(0);
-		obraz.setFitHeight(50);
+	public Player(final Stage stage, final Point2D initPos) {
+		bron.ustawBron("AK-47");
+		
+		obraz.setImage(bron.getPlayerImage());
+		obraz.setTranslateX(initPos.getX()/2);
+		obraz.setTranslateY(initPos.getY()/2);
+		obraz.setFitHeight(imageSize);
 		obraz.setPreserveRatio(true);
 		rotateOffsetX = obraz.getBoundsInParent().getWidth()/2;
 		rotateOffsetY = obraz.getBoundsInParent().getHeight()/2;
-		
 		//przypisz obraz do node
-		node = obraz;
 		
-		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED,
+		myGroup.getChildren().add(0, obraz);
+		myGroup.getChildren().add(1, bron.node);
+		node = myGroup;
+		
+		stage.addEventHandler(KeyEvent.KEY_PRESSED,
             new EventHandler<KeyEvent>()
             {
                 public void handle(KeyEvent e)
@@ -73,8 +79,7 @@ public class Player extends Sprite {
                         input.add( code );
                 }
             });
- 
-        primaryStage.addEventHandler(KeyEvent.KEY_RELEASED,
+        stage.addEventHandler(KeyEvent.KEY_RELEASED,
             new EventHandler<KeyEvent>()
             {
                 public void handle(KeyEvent e)
@@ -83,7 +88,7 @@ public class Player extends Sprite {
                     input.remove( code );
                 }
             });
-		primaryStage.addEventHandler(MouseEvent.ANY,
+		stage.addEventHandler(MouseEvent.ANY,
 			new EventHandler<MouseEvent>()
             {
                 public void handle(MouseEvent e)
@@ -99,26 +104,30 @@ public class Player extends Sprite {
 	public void update() {
 		// chodzenie WSAD
 		if (input.contains("W")) {
-			obraz.setTranslateY( obraz.getTranslateY() - speed );
+			obraz.setTranslateY(obraz.getTranslateY() - playerSpeed );
 		}
 		if (input.contains("S")) {
-			obraz.setTranslateY( obraz.getTranslateY() + speed );
+			obraz.setTranslateY(obraz.getTranslateY() + playerSpeed );
 		}
 		if (input.contains("A")) {
-			obraz.setTranslateX( obraz.getTranslateX() - speed );
+			obraz.setTranslateX(obraz.getTranslateX() - playerSpeed );
 		}
 		if (input.contains("D")) {
-			obraz.setTranslateX( obraz.getTranslateX() + speed );
+			obraz.setTranslateX(obraz.getTranslateX() + playerSpeed );
 		}
 		// obracanie obrazu do myszy
-		double deltaY = mouseY - (obraz.getTranslateY()+rotateOffsetY);
-		double deltaX = mouseX - (obraz.getTranslateX()+rotateOffsetX);
-		double angle = Math.atan2(deltaY, deltaX)*180/Math.PI;
-		obraz.setRotate(angle+90);
-		//
-		if ( mouseButton == MouseButton.PRIMARY ) {
-			// SZRZELANIE! 
+		double middleX = obraz.getTranslateX()+rotateOffsetX;
+		double middleY = obraz.getTranslateY()+rotateOffsetY;
+		double deltaX = middleX - mouseX;
+		double deltaY = middleY - mouseY;
+		double angle = Math.atan2(deltaX, deltaY)*180/Math.PI;
+		obraz.setRotate(-angle);
+		
+		//if ( mouseButton == MouseButton.PRIMARY ) {
+		if ( input.contains("Q") ) {
+			bron.strzel(middleX, middleY, angle);
 		}
-		node = obraz;
+		
+		bron.update();
 	}
 }

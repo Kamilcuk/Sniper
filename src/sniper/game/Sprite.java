@@ -1,36 +1,51 @@
+/*
+ * Copyright (C) 2015 kamil
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 package sniper.game;
  
-import java.util.ArrayList;
-import java.util.List;
-import javafx.animation.Animation;
 import javafx.scene.Node;
- 
+
 /**
- * The Sprite class represents a image or node to be displayed.
- * In a 2D game a sprite will contain a velocity for the image to
- * move across the scene area. The game loop will call the update()
- * and collide() method at every interval of a key frame. A list of
- * animations can be used during different situations in the game
- * such as rocket thrusters, walking, jumping, etc.
- * @author cdea
+ * Reprezentuje pojedynczy dowolnuy sprite.
+ * @author Kamil Cukrowski
  */
 public abstract class Sprite {
 	
-    /** Current display node */
+    /** display node */
     public Node node;
  
     /**
-     * Updates this sprite object's velocity, or animations.
+	 * Funkcja służąca odświarzeniu obiektu.
      */
     public abstract void update();
  
     /**
-     * Did this sprite collide into the other sprite?
-     *
+     * Czy nasz sprite ma kolizję z drugim?
      * @param other - The other sprite.
      * @return
      */
     public boolean collide(Sprite other) {
         return false;
     }
+	/**
+	 * Czy nasz sprite juz moze byc usuniety
+	 * @return 
+	 */
+	public boolean wantsToBeRemoved() {
+		return false;
+	}
 }

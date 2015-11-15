@@ -1,11 +1,15 @@
 package sniper.game;
  
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TimelineBuilder;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -36,11 +40,9 @@ public abstract class GameWorld {
     /** Number of frames per second. */
     private final int framesPerSecond = 60;
  
-    /**
-     * The sprite manager.
-     */
-    private final SpriteManager spriteManager = new SpriteManager();
- 
+	    /** All the sprite objects currently in play */
+    private final static List<Sprite> GAME_ACTORS = new ArrayList<>();
+  
     /**
      * Constructor that is called by the derived class. This will
      * set the frames per second, title, and setup the game loop.
@@ -60,16 +62,10 @@ public abstract class GameWorld {
             new EventHandler<javafx.event.ActionEvent>() {
 				
                 public void handle(javafx.event.ActionEvent event) {
- 
                     // update actors
                     updateSprites();
- 
                     // check for collision
                     checkCollisions();
- 
-                    // removed dead things
-                    cleanupSprites();
- 
                 }
         }); // oneFrame
  
@@ -103,7 +99,7 @@ public abstract class GameWorld {
      *
      */
     protected void updateSprites() {
-        for (Sprite sprite : spriteManager.getAllSprites()){
+        for (Sprite sprite : getAllSprites()){
             handleUpdate(sprite);
         }
     }
@@ -112,6 +108,7 @@ public abstract class GameWorld {
      * @param sprite - The sprite to update.
      */
     protected void handleUpdate(Sprite sprite) {
+		sprite.update();
     }
  
     /**
@@ -122,20 +119,13 @@ public abstract class GameWorld {
      *
      */
     protected void checkCollisions() {
-        // check other sprite's collisions
-        spriteManager.resetCollisionsToCheck();
-        // check each sprite against other sprite objects.
-        for (Sprite spriteA : spriteManager.getCollisionsToCheck()) {
-            for (Sprite spriteB : spriteManager.getAllSprites()) {
-                if (handleCollision(spriteA, spriteB)) {
-                    // The break helps optimize the collisions
-                    //  The break statement means one object only hits another
-                    // object as opposed to one hitting many objects.
-                    // To be more accurate comment out the break statement.
-                    break;
-                }
-            }
-        }
+		for(int i=0;i<getAllSprites().size();i++) {
+			Sprite spriteA = getAllSprites().get(i);
+			for (int j=i+1;j<getAllSprites().size();j++) {
+				Sprite spriteB = getAllSprites().get(j);
+				handleCollision(spriteA, spriteB);
+			}
+		}
     }
  
     /**
@@ -144,17 +134,10 @@ public abstract class GameWorld {
      * collide.
      * @param spriteA - called from checkCollision() method to be compared.
      * @param spriteB - called from checkCollision() method to be compared.
-     * @return boolean True if the objects collided, otherwise false.
      */
-    protected boolean handleCollision(Sprite spriteA, Sprite spriteB) {
-        return false;
-    }
- 
-    /**
-     * Sprites to be cleaned up.
-     */
-    protected void cleanupSprites() {
-        spriteManager.cleanupSprites();
+    protected void handleCollision(Sprite spriteA, Sprite spriteB) {
+		spriteA.collide(spriteB);
+		spriteB.collide(spriteA);
     }
  
     /**
@@ -182,15 +165,6 @@ public abstract class GameWorld {
      */
     protected static void setGameLoop(Timeline gameLoop) {
         GameWorld.gameLoop = gameLoop;
-    }
- 
-    /**
-     * Returns the sprite manager containing the sprite objects to
-     * manipulate in the game.
-     * @return SpriteManager The sprite manager.
-     */
-    protected SpriteManager getSpriteManager() {
-        return spriteManager;
     }
  
     /**
@@ -230,5 +204,34 @@ public abstract class GameWorld {
     protected void setSceneNodes(Group sceneNodes) {
         this.sceneNodes = sceneNodes;
     }
+	
+	public void addNodeToScene(Node node) {
+		getSceneNodes().getChildren().add(node);
+	}
  
+	    /**
+	 * @return return list of all sprites in manager
+	 */
+    public List<Sprite> getAllSprites() {
+        return GAME_ACTORS;
+    }
+ 
+    /**
+     * VarArgs of sprite objects to be added to the game.
+     * @param sprites
+     */
+    public void addSprites(Sprite... sprites) {
+        GAME_ACTORS.addAll(Arrays.asList(sprites));
+		for(Sprite sprite : sprites) {
+			addNodeToScene(sprite.node);
+		}
+    }
+ 
+    /**
+     * VarArgs of sprite objects to be removed from the game.
+     * @param sprites
+     */
+    public void removeSprites(Sprite... sprites) {
+        GAME_ACTORS.removeAll(Arrays.asList(sprites));
+	}
 }
