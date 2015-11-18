@@ -17,40 +17,37 @@
  */
 package sniper.game;
 
-import java.util.ArrayList;
-import java.util.List;
 import javafx.geometry.Point2D;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 /**
  *
  * @author Kamil Cukrowski
  */
-class Bron extends Sprite {
-	private final List<Sprite> pociski = new ArrayList<>();
-	private final Group group = new Group();
+class Bron extends SpriteManager {
+	private final Player player;
+
 	
 	private long nextTime;  // w ms
 	
 	/* ustawienia broni */
-	private int bulletSpeed;
+	private double bulletSpeed;
+	private double bulletAttack;
 	private int shootingSpeed; //ms?
 	private Image playerImage;
 	
-	public Bron() {
+	public Bron(final Player player) {
+		this.player = player;
 		nextTime = 0;
-		
-		node = group;
 	}
 	
 	public void ustawBron(String typ) {
 		switch(typ) {
 			case "AK-47":
 		        playerImage = new Image("File:resources\\weapon\\AK-47\\player.png");
-				bulletSpeed = 10;
-				shootingSpeed = 100;
+				bulletSpeed = 30;
+				bulletAttack = 50;
+				shootingSpeed = 500;
 				break;
 			default:
 				playerImage = null;
@@ -61,21 +58,21 @@ class Bron extends Sprite {
 		return playerImage;
 	}
 	
-	public void strzel(final double origX, final double origY, final double angle) {
+	public void strzel() {
+		final Point2D orig = player.getMiddle();
+		final double angle = player.node.getRotate();
 		long currTime = System.nanoTime()/1000000;
 		if ( currTime >= nextTime ) {
-			Pocisk pocisk = new Pocisk(origX, origY, angle, bulletSpeed);
-			group.getChildren().add(pocisk.node);
-			pociski.add(pocisk);
-			
+			(new SpriteManager()).addSprite(new Pocisk(this, orig, angle));
 			nextTime = currTime + shootingSpeed;
 		}
 	}
 	
-	@Override
-	public void update() {
-		for(Sprite pocisk : pociski) {
-			pocisk.update();
-		}
+	public double getBulletSpeed() {
+		return bulletSpeed;
+	}
+
+	public double getBulletAttack() {
+		return bulletAttack*player.getPlayerAtt();
 	}
 }

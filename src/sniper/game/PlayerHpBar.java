@@ -17,10 +17,26 @@
  */
 package sniper.game;
 
+import javafx.scene.control.ProgressBar;
+
 /**
  *
  * @author Kamil Cukrowski
  */
-class gameWorld {
+public class PlayerHpBar extends Sprite {
+	private final Player player;
+	private final ProgressBar progressBar = new ProgressBar();
+	public PlayerHpBar(Player player) {
+		this.player = player;
+		progressBar.setTranslateX(3);
+		progressBar.setTranslateY(3);
+		node = progressBar;
+	}
+
+	@Override
+	public void update() {
+		progressBar.setProgress(player.getPlayerHpPercentage());
+	}
+	
 	
 }

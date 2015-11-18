@@ -17,11 +17,14 @@
  */
 package sniper.game;
 
+import javafx.animation.Animation;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -30,19 +33,14 @@ import javafx.stage.Stage;
  */
 public class SniperWorld1 extends GameWorld {
 
-	
-	public SniperWorld1() {
-	}
-	
 	@Override
-	public void initialize(final Stage primaryStage) {
+	public void initialize(final Stage stage) {
 		 // Sets the window title
-        primaryStage.setTitle("SniperWorld1");
+        stage.setTitle("SniperWorld1");
 		// Create the scene
-        setSceneNodes(new Group());
-        setGameSurface(new Scene(getSceneNodes(), 640, 480));
-        primaryStage.setScene(getGameSurface());
-		
+        setGroup(new Group());
+        setScene(new Scene(getGroup(), 640, 480));
+        stage.setScene(getScene());
 		
 		
 		//background		
@@ -54,21 +52,29 @@ public class SniperWorld1 extends GameWorld {
          bg.setSmooth(true);
          bg.setCache(true);
 
-		getSceneNodes().getChildren().add(0, bg);
+		getGroup().getChildren().add(0, bg);
 		
 		// player
-		Player player = new Player(primaryStage,
-				new Point2D(
-					getGameSurface().getHeight(),
-					getGameSurface().getWidth()
-				));
-		addSprites(player);
+		Player player = new Player(
+				new Point2D(getScene().getWidth()/2,getScene().getHeight()/2));
+		addSprite(player);
+		
+		// zombie manager
+		ZombieManager zombieManager = new ZombieManager(this, player, 5);
+		addSprite(zombieManager);
+		
+		PlayerHpBar playerHpBar = new PlayerHpBar(player);
+		addSprite(playerHpBar);
+	}	
+	protected void handleOnKeyPressed(KeyEvent e) {
+		if ( e.getCode() == KeyCode.SPACE ) {
+			if ( getGameLoop().getStatus() != Animation.Status.RUNNING )
+				getGameLoop().play();
+			if ( getGameLoop().getStatus() == Animation.Status.RUNNING )
+				getGameLoop().pause();
+		}
+		
 	}
-	
-	@Override
-	public void handleUpdate(Sprite sprite){
-		sprite.update();
+	protected void handleOnKeReleased(KeyEvent e) {
 	}
-	
-	
 }

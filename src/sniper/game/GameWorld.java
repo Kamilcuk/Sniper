@@ -1,18 +1,33 @@
+/*
+ * Copyright (C) 2015 Kamil Cukrowski
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 package sniper.game;
  
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TimelineBuilder;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.geometry.Point2D;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
  
 /**
  * This application demonstrates a JavaFX 2.x Game Loop.
@@ -26,23 +41,23 @@ import javafx.util.Duration;
  *  <strong>cleanupSprites()</strong> - Any sprite objects needing to be removed from play.
  *
  * Skopiowane z https://github.com/carldea/JFXGen/
- * @author cdea
  */
-public abstract class GameWorld {
+/**
+ *
+ * @author Kamil Cukrowski
+ */
+public abstract class GameWorld extends SpriteManager {
  
     /** The JavaFX Scene as the game surface */
-    private Scene gameSurface;
-    /** All nodes to be displayed in the game window. */
-    private Group sceneNodes;
+    private Scene scene;
     /** The game loop using JavaFX's <code>Timeline</code> API.*/
     private static Timeline gameLoop;
- 
+	
     /** Number of frames per second. */
-    private final int framesPerSecond = 60;
- 
-	    /** All the sprite objects currently in play */
-    private final static List<Sprite> GAME_ACTORS = new ArrayList<>();
+    private final int framesPerSecond = 30;
   
+	private final WindowBound windowBound = new WindowBound();
+	
     /**
      * Constructor that is called by the derived class. This will
      * set the frames per second, title, and setup the game loop.
@@ -56,16 +71,11 @@ public abstract class GameWorld {
      * Builds and sets the game loop ready to be started.
      */
     protected final void buildAndSetGameLoop() {
- 
         final Duration oneFrameAmt = Duration.millis(1000/getFramesPerSecond());
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
             new EventHandler<javafx.event.ActionEvent>() {
-				
                 public void handle(javafx.event.ActionEvent event) {
-                    // update actors
-                    updateSprites();
-                    // check for collision
-                    checkCollisions();
+					spriteManagerUpdate();
                 }
         }); // oneFrame
  
@@ -90,54 +100,6 @@ public abstract class GameWorld {
      */
     public void beginGameLoop() {
         getGameLoop().play();
-    }
- 
-    /**
-     * Updates each game sprite in the game world. This method will
-     * loop through each sprite and passing it to the handleUpdate()
-     * method. The derived class should override handleUpdate() method.
-     *
-     */
-    protected void updateSprites() {
-        for (Sprite sprite : getAllSprites()){
-            handleUpdate(sprite);
-        }
-    }
- 
-    /** Updates the sprite object's information to position on the game surface.
-     * @param sprite - The sprite to update.
-     */
-    protected void handleUpdate(Sprite sprite) {
-		sprite.update();
-    }
- 
-    /**
-     * Checks each game sprite in the game world to determine a collision
-     * occurred. The method will loop through each sprite and
-     * passing it to the handleCollision()
-     * method. The derived class should override handleCollision() method.
-     *
-     */
-    protected void checkCollisions() {
-		for(int i=0;i<getAllSprites().size();i++) {
-			Sprite spriteA = getAllSprites().get(i);
-			for (int j=i+1;j<getAllSprites().size();j++) {
-				Sprite spriteB = getAllSprites().get(j);
-				handleCollision(spriteA, spriteB);
-			}
-		}
-    }
- 
-    /**
-     * When two objects collide this method can handle the passed in sprite
-     * objects. By default it returns false, meaning the objects do not
-     * collide.
-     * @param spriteA - called from checkCollision() method to be compared.
-     * @param spriteB - called from checkCollision() method to be compared.
-     */
-    protected void handleCollision(Sprite spriteA, Sprite spriteB) {
-		spriteA.collide(spriteB);
-		spriteB.collide(spriteA);
     }
  
     /**
@@ -172,8 +134,8 @@ public abstract class GameWorld {
      * allow the developer to add JavaFX Node objects onto the Scene.
      * @return
      */
-    public Scene getGameSurface() {
-        return gameSurface;
+    public Scene getScene() {
+        return scene;
     }
  
     /**
@@ -181,57 +143,67 @@ public abstract class GameWorld {
      * allow the developer to add JavaFX Node objects onto the Scene.
      * @param gameSurface The main game surface (JavaFX Scene).
      */
-    protected void setGameSurface(Scene gameSurface) {
-        this.gameSurface = gameSurface;
-    }
- 
-    /**
-     * All JavaFX nodes which are rendered onto the game surface(Scene) is
-     * a JavaFX Group object.
-     * @return Group The root containing many child nodes to be displayed into
-     * the Scene area.
-     */
-    public Group getSceneNodes() {
-        return sceneNodes;
-    }
- 
-    /**
-     * Sets the JavaFX Group that will hold all JavaFX nodes which are rendered
-     * onto the game surface(Scene) is a JavaFX Group object.
-     * @param sceneNodes The root container having many children nodes
-     * to be displayed into the Scene area.
-     */
-    protected void setSceneNodes(Group sceneNodes) {
-        this.sceneNodes = sceneNodes;
+    protected void setScene(Scene gameSurface) {
+        this.scene = gameSurface;
+		
+		windowBound.setResolution(new Point2D(getScene().getWidth(),getScene().getHeight()));
+		addSprite(windowBound);
+		
+		/** install event handlers */
+		scene.addEventHandler(KeyEvent.KEY_PRESSED,
+            new EventHandler<KeyEvent>()
+            {
+                public void handle(KeyEvent e)
+                {
+                    onKeyPressed(e);
+                }
+            });
+        scene.addEventHandler(KeyEvent.KEY_RELEASED,
+            new EventHandler<KeyEvent>()
+            {
+                public void handle(KeyEvent e)
+                {
+                    onKeyReleased(e);
+                }
+            });
+		scene.addEventHandler(MouseEvent.ANY,
+			new EventHandler<MouseEvent>()
+            {
+                public void handle(MouseEvent e)
+                {
+					onMouseEvent(e);
+                }
+            });
     }
 	
-	public void addNodeToScene(Node node) {
-		getSceneNodes().getChildren().add(node);
-	}
- 
-	    /**
-	 * @return return list of all sprites in manager
-	 */
-    public List<Sprite> getAllSprites() {
-        return GAME_ACTORS;
-    }
- 
-    /**
-     * VarArgs of sprite objects to be added to the game.
-     * @param sprites
-     */
-    public void addSprites(Sprite... sprites) {
-        GAME_ACTORS.addAll(Arrays.asList(sprites));
-		for(Sprite sprite : sprites) {
-			addNodeToScene(sprite.node);
+	protected void onKeyPressed(KeyEvent e) {
+		handleOnKeyPressed(e);
+		for(Sprite sprite : getAllSprites()) {
+			sprite.onKeyPressed(e);
 		}
-    }
- 
-    /**
-     * VarArgs of sprite objects to be removed from the game.
-     * @param sprites
-     */
-    public void removeSprites(Sprite... sprites) {
-        GAME_ACTORS.removeAll(Arrays.asList(sprites));
+	}
+	protected void onKeyReleased(KeyEvent e) {
+		handleOnKeReleased(e);
+		for(Sprite sprite : getAllSprites()) {
+			sprite.onKeyReleased(e);
+		}
+		
+	}
+	protected void onMouseEvent(MouseEvent e) {
+		handleOnMouseEvent(e);
+		for(Sprite sprite : getAllSprites()) {
+			sprite.onMouseEvent(e);
+		}
+		
+	}
+	
+	protected void handleOnKeyPressed(KeyEvent e) {
+		
+	}
+	protected void handleOnKeReleased(KeyEvent e) {
+		
+	}
+	protected void handleOnMouseEvent(MouseEvent e) {
+		
 	}
 }

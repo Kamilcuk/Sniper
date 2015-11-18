@@ -18,39 +18,58 @@
 package sniper.game;
 
 import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.StrokeType;
 
 /**
  *
  * @author Kamil Cukrowski
  */
 public class Pocisk extends Sprite {
+	/** config */
+	private final Bron bron;
 	
-	final double angle, speed;
 	public Pocisk(
-			final double origX,
-			final double origY,
-			final double _angle,
-			final int _speed) {
-		angle = _angle;
-		speed = _speed;
+			final Bron bron,
+			final Point2D orig,
+			final double angle) {
+		this.bron =  bron;
 		
 		Circle circle = new Circle(2, Color.web("black", 1));
-		//circle.setStrokeType(StrokeType.OUTSIDE);
-        //circle.setStroke(Color.web("white", 0.16));
         circle.setStrokeWidth(4);		
-		circle.setTranslateX(origX);
-		circle.setTranslateY(origY);
+		circle.setTranslateX(orig.getX());
+		circle.setTranslateY(orig.getY());
 		
+		vX = bron.getBulletSpeed()*Math.sin(angle*Math.PI/180);
+		vY = -bron.getBulletSpeed()*Math.cos(angle*Math.PI/180);
+		
+		//node = circle;
+		collisionBounds = circle;
 		node = circle;
 	}
 	@Override
 	public void update() {
-		node.setTranslateX(node.getTranslateX()-speed*Math.sin(angle*Math.PI/180));
-		node.setTranslateY(node.getTranslateY()-speed*Math.cos(angle*Math.PI/180));
+		node.setTranslateX(node.getTranslateX()+vX);
+		node.setTranslateY(node.getTranslateY()+vY);
+	}
+
+	@Override
+	protected void collide(Sprite other) {
+		double dist = jakBliskoCollide(other);
+		if ( dist >= 0 ) return;
+		if ( other.getClass().equals(Zombie.class) ) {
+			hit();
+		}
+		if ( other.getClass().equals(WindowBound.class) ) {
+			(new SpriteManager()).removeSprite(this);
+		}
+	}
+	
+	public void hit() {
+		(new SpriteManager()).removeSprite(this);
+	}
+	
+	public double getBulletAttack() {
+		return bron.getBulletAttack();
 	}
 }
