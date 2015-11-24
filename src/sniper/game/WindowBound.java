@@ -26,7 +26,7 @@ import javafx.geometry.Point2D;
  * @author Kamil Cukrowski
  */
 public class WindowBound extends Sprite {
-	static Point2D res;
+	private static Point2D res = new Point2D(0,0);
 		
 	public void setResolution(Point2D res) {
 			this.res = res;
@@ -40,24 +40,19 @@ public class WindowBound extends Sprite {
 	public double jakBliskoCollide(Sprite other) {
 		if ( other.node == null )
 			return Double.POSITIVE_INFINITY;
-		double othX = other.node.getTranslateX();
-		double othY = other.node.getTranslateY();
-		if ( othX < 0 )
-			return othX;
-		if ( othY < 0 )
-			return othY;
-		if ( othX < 0 && othY < 0 )
-			return Math.sqrt(othX*othX+othY*othY);
 		
-		othX = res.getX() - othX;
-		othY = res.getY() - othY;
-		if ( othX < 0 )
-			return othX;
-		if ( othY < 0 )
-			return othY;
-		if ( othX < 0 && othY < 0 )
-			return Math.sqrt(othX*othX+othY*othY);
-		return 0;
+		double otherX = other.getMiddle().getX();
+		double otherY = other.getMiddle().getY();
+		double oX = otherX;
+		double oY = otherY;
+		double mX = res.getX() - otherX;
+		double mY = res.getY() - otherY;
+		
+		if ( oX < 0 && oY < 0 && mX > 0 && mY > 0 ) return Math.sqrt(oX*oX+oY*oY);
+		if ( oX < 0 && oY > 0 && mX > 0 && mY < 0 ) return Math.sqrt(oX*oX+mY*mY);
+		if ( oX > 0 && oY > 0 && mX < 0 && mY > 0 ) return Math.sqrt(mX*mX+mY*mY);
+		if ( oX > 0 && oY < 0 && mX < 0 && mY > 0 ) return Math.sqrt(oY*oY+mY*mY);
+		return Math.min(Math.min(oX, oY),Math.min(mX, mY));
 	}
 	
 	@Override
