@@ -19,10 +19,6 @@ package sniper.game;
 
 import javafx.geometry.Point2D;
 import javafx.scene.CacheHint;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.ColorInput;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -38,7 +34,7 @@ import javafx.scene.shape.Circle;
 public class Zombie extends Sprite {
 	private final Player player;
 	private final ImageView obraz = new ImageView();
-	private Image image;
+	private boolean init = true;
 	
 	/** ataki się dzieją co określony czas */
 	private long nextTime = 0;  // w ms
@@ -59,11 +55,10 @@ public class Zombie extends Sprite {
 		this.type = type;
 		setType(type);
 		
-		obraz.setImage(image);
 		obraz.setFitHeight(imageSize);
 		obraz.setPreserveRatio(true);
-		obraz.setTranslateX(orig.getX()+imageSize/2);
-		obraz.setTranslateY(orig.getY()+imageSize/2);
+		obraz.setTranslateX(orig.getX()-imageSize/2);
+		obraz.setTranslateY(orig.getY()-imageSize/2);
         obraz.setCache(true);
         obraz.setCacheHint(CacheHint.SPEED);
 		
@@ -71,55 +66,77 @@ public class Zombie extends Sprite {
 		collisionBounds.setRadius(20);
 		
 		node = obraz;
+		
+		// init vX and vY - idziemy sobie troche krzywo do środka
+		Point2D p = WindowBound.getResolution().multiply(0.5).subtract(orig);
+		double angle = Math.atan2(p.getX(), -p.getY())*180/Math.PI;
+		node.setRotate(angle);
+		vX = movingSpeed*Math.sin(angle*Math.PI/180);
+		vY = -movingSpeed*Math.cos(angle*Math.PI/180);
 	}
 	
-	public void setType(final int type) {
-		image = new Image("File:resources\\monsters\\zombie.png");
+	/**
+	 * pomocnicza funkcja odpowiadająco za określenie parametrów zombiaka (życie, attack,
+	 * prędkość, wygląd, wielkość) w zależności od podanego typu)
+	 * @param type 
+	 */
+	private void setType(final int type) {
+		Image image;
 		switch(type) {
 		default:
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+			image = new Image("File:resources/monsters/zombie.png");
+			break;
+		}
+		switch(type) {
 		case 0: // normal
-			imageSize = 50;
-			movingSpeed = 1;
-			hp = 100;
-			zombieAttack = 20;
+			imageSize = 40;			movingSpeed = 0.7;
+			hp = 100;				zombieAttack = 20;
 			zombieAttackSpeed = 2000; //ms
 			break;
 		case 1: // slow, big attack
-			image = overrideImage(image, 1., 0., 0.);
-			imageSize = 50;
-			movingSpeed = .5;
-			hp = 100;
-			zombieAttack = 5;
+			image = Helper.overrideImage(image, 0., 1., 0.);
+			imageSize = 40;			movingSpeed = 0.5;
+			hp = 50;				zombieAttack = 5;
 			zombieAttackSpeed = 1000; //ms
 			break;
 		case 2: // fast, small attack
-			image = overrideImage(image, 0., 0., 1.);
-			imageSize = 50;
-			movingSpeed = 5;
-			hp = 100;
-			zombieAttack = 20;
+			image = Helper.overrideImage(image, 0., 0., 1.);
+			imageSize = 40;			movingSpeed = 3;
+			hp = 100;				zombieAttack = 20;
 			zombieAttackSpeed = 2000; //ms
 			break;
 		case 3: // big, life + big attack
-			image = overrideImage(image, 1., 0., 0.);
-			imageSize = 100;
-			movingSpeed = 1.5;
-			hp = 300;
-			zombieAttack = 30;
+			image = Helper.overrideImage(image, 1., 0., 0.);
+			imageSize = 80;			movingSpeed = 1.5;
+			hp = 300;				zombieAttack = 30;
 			zombieAttackSpeed = 3000; //ms
 			break;
 		}
+		obraz.setImage(image);
+	}
+	/**
+	* Zwraca typ zombiaka.
+	* @return 
+	*/
+	public int getType() {
+		return type;
 	}
 
 	@Override
 	public void preUpdate() {
+		if ( jakBliskoCollide(player) > 200 ) {
+			return;
+		}
+		
 		// punkt srodka zombiaka wzgledem srodka playera
 		Point2D p = player.getMiddle()
 				.subtract(node.getTranslateX(), node.getTranslateY())
 				.subtract(imageSize/2, imageSize/2);
 		double angle = Math.atan2(p.getX(), -p.getY())*180/Math.PI;
-		// update rotation to player		
-		node.setRotate(angle);
 		
 		// update velocities to player
 		vX = movingSpeed*Math.sin(angle*Math.PI/180);
@@ -129,31 +146,51 @@ public class Zombie extends Sprite {
 	@Override
 	public void collide(Sprite other) {
 		double dist = jakBliskoCollide(other);
+		if ( other.getClass().equals(WindowBound.class)) {
+			if ( init ) {
+				if ( dist > 200 ) {
+					init = false;
+				}
+			} else {
+				if ( dist < 10 ) {
+					vX = -vX;
+					vY = -vY;
+				}
+			}
+		}
 		if ( dist >= 0 ) return;
 		if ( other.getClass().equals(Pocisk.class) ) {
-			System.out.println("IN");
 			Pocisk pocisk = (Pocisk) other;
 			hp = hp - (int)pocisk.getBulletAttack();
 		} else if ( other.getClass().equals(Player.class) ) {
 			vX = 0;
 			vY = 0;
+		} else if ( other.getClass().equals(WindowBound.class) ) {
+			if ( !init && dist >= 300) {
+				/* co ja tutaj robie? */
+				(new SpriteManager()).removeSprite(this);
+			}
 		}
 	}
 	
 	@Override
 	public void update() {
 		if ( hp < 0 ) {
-			ZombieManager.addDeadZombie();
+			ZombieManager.addDeadZombie(this);
 			(new SpriteManager()).removeSprite(this);
 		}
+		
+		//rotate
+		if ( vX != 0 && vY != 0 )
+			node.setRotate(Math.atan2(vX, -vY)*180/Math.PI);
 		
 		// move
 		node.setTranslateX(node.getTranslateX() + vX);
 		node.setTranslateY(node.getTranslateY() + vY);
 		
 		// update collisionBound
-		collisionBounds.setTranslateX(node.getTranslateX()+imageSize/2);
-		collisionBounds.setTranslateY(node.getTranslateY()+imageSize/2);
+		collisionBounds.setTranslateX(getMiddle().getX());
+		collisionBounds.setTranslateY(getMiddle().getY());
 	}
 
 	int getZombieAttack() {			
@@ -163,48 +200,5 @@ public class Zombie extends Sprite {
 			return(zombieAttack);
 		}
 		return 0;
-	}
-	
-	private static Image overrideImage(Image image, double adjRed, double adjGreen, double adjBlue) {
-		double height = image.getHeight();
-		double width = image.getWidth();
-		PixelWriter pixelWriter;
-		PixelReader pixelReader;
-		pixelReader = image.getPixelReader();
-		WritableImage writableImage = new WritableImage((int)width, (int)height);
-        pixelWriter = writableImage.getPixelWriter();
-        
-        for (int y = 0; y < height; y++){
-            for (int x = 0; x < width; x++){
-                Color color = pixelReader.getColor(x, y);
-                pixelWriter.setColor(x, y, color);
-                
-                double red = color.getRed() + adjRed;
-                if(red > 1.0){
-                    red = 1.0;
-                }else if(red < 0.0){
-                    red = 0.0;
-                }
-                
-                double green = color.getGreen() + adjGreen;
-                if(green > 1.0){
-                    green = 1.0;
-                }else if(green < 0.0){
-                    green = 0.0;
-                }
-                
-                double blue = color.getBlue() + adjBlue;
-                if(blue > 1.0){
-                    blue = 1.0;
-                }else if(blue < 0.0){
-                    blue = 0.0;
-                }
-                
-                double opacity = color.getOpacity();
-                
-                pixelWriter.setColor(x, y, new Color(red, green, blue, opacity));
-            }
-        }
-		return (Image) writableImage;
 	}
 }
