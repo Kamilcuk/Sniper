@@ -39,16 +39,16 @@ public class SniperWorld1 extends GameWorld {
         stage.setTitle("SniperWorld1");
 		// Create the scene
         setGroup(new Group());
-        setScene(new Scene(getGroup(), 640, 480));
+        setScene(new Scene(getGroup(), 1024, 768));
         stage.setScene(getScene());
 		
 		
 		//background		
 		ImageView bg = new ImageView();
-         bg.setImage(new Image("File:resources\\images\\terrain\\base_0.png"));
+         bg.setImage(new Image("File:resources\\images\\terrain\\base_1.png"));
          bg.setPreserveRatio(false);
-         bg.setFitHeight(480);
-         bg.setFitWidth(640);
+         bg.setFitWidth(WindowBound.getResolution().getX());
+         bg.setFitHeight(WindowBound.getResolution().getY());
          bg.setSmooth(true);
          bg.setCache(true);
 
@@ -60,12 +60,14 @@ public class SniperWorld1 extends GameWorld {
 		addSprite(player);
 		
 		// zombie manager
-		ZombieManager zombieManager = new ZombieManager(this, player, 5);
+		ZombieManager zombieManager = new ZombieManager(this, player);
 		addSprite(zombieManager);
 		
 		PlayerHpBar playerHpBar = new PlayerHpBar(player);
 		addSprite(playerHpBar);
-	}	
+	}
+	
+	@Override
 	protected void handleOnKeyPressed(KeyEvent e) {
 		if ( e.getCode() == KeyCode.SPACE ) {
 			if ( getGameLoop().getStatus() != Animation.Status.RUNNING )
@@ -75,6 +77,8 @@ public class SniperWorld1 extends GameWorld {
 		}
 		
 	}
+	
+	@Override
 	protected void handleOnKeReleased(KeyEvent e) {
 	}
 }

@@ -35,6 +35,8 @@ public class Pocisk extends Sprite {
 			final double angle) {
 		this.bron =  bron;
 		
+		SoundManager.playSound("shot");
+		
 		Circle circle = new Circle(2, Color.web("black", 1));
         circle.setStrokeWidth(4);		
 		circle.setTranslateX(orig.getX());
@@ -58,15 +60,11 @@ public class Pocisk extends Sprite {
 		double dist = jakBliskoCollide(other);
 		if ( dist >= 0 ) return;
 		if ( other.getClass().equals(Zombie.class) ) {
-			hit();
+			(new SpriteManager()).removeSprite(this);
 		}
 		if ( other.getClass().equals(WindowBound.class) ) {
 			(new SpriteManager()).removeSprite(this);
 		}
-	}
-	
-	public void hit() {
-		(new SpriteManager()).removeSprite(this);
 	}
 	
 	public double getBulletAttack() {

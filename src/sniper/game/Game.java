@@ -26,6 +26,7 @@ import javafx.stage.Stage;
  * @author Kamil Cukrowski
  */
 public class Game extends Application {
+
 	/** świat naszej gry */
 	GameWorld gameWorld = new SniperWorld1();
 	
@@ -44,11 +45,15 @@ public class Game extends Application {
     public void start(Stage stage) {
         // setup title, scene, stats, controls, and actors.
         gameWorld.initialize(stage);
-
         // kick off the game loop
         gameWorld.beginGameLoop();
-
         // display window
-        stage.show();       
+        stage.show();
     }
+	
+	@Override
+	public void stop() {
+		// shutdown
+		gameWorld.shutdown();
+	}
 }

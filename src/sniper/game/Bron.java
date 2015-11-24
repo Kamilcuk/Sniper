@@ -24,7 +24,7 @@ import javafx.scene.image.Image;
  *
  * @author Kamil Cukrowski
  */
-class Bron extends SpriteManager {
+class Bron {
 	private final Player player;
 
 	
@@ -44,10 +44,12 @@ class Bron extends SpriteManager {
 	public void ustawBron(String typ) {
 		switch(typ) {
 			case "AK-47":
-		        playerImage = new Image("File:resources\\weapon\\AK-47\\player.png");
+		        playerImage = new Image("File:resources/weapon/AK-47/player.png");
 				bulletSpeed = 30;
 				bulletAttack = 50;
-				shootingSpeed = 500;
+				shootingSpeed = 100;
+				SoundManager.loadSoundEffects("shot", "File:resources/weapon/AK-47/shot.mp3");
+				SoundManager.loadSoundEffects("reload", "file:resources/weapon/AK-47/reload.mp3");
 				break;
 			default:
 				playerImage = null;

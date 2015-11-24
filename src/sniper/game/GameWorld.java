@@ -26,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
  
@@ -46,7 +47,7 @@ import javafx.scene.input.MouseEvent;
  *
  * @author Kamil Cukrowski
  */
-public abstract class GameWorld extends SpriteManager {
+public abstract class GameWorld {
  
     /** The JavaFX Scene as the game surface */
     private Scene scene;
@@ -75,7 +76,7 @@ public abstract class GameWorld extends SpriteManager {
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
             new EventHandler<javafx.event.ActionEvent>() {
                 public void handle(javafx.event.ActionEvent event) {
-					spriteManagerUpdate();
+					SpriteManager.spriteManagerUpdate();
                 }
         }); // oneFrame
  
@@ -178,20 +179,20 @@ public abstract class GameWorld extends SpriteManager {
 	
 	protected void onKeyPressed(KeyEvent e) {
 		handleOnKeyPressed(e);
-		for(Sprite sprite : getAllSprites()) {
+		for(Sprite sprite : SpriteManager.getAllSprites()) {
 			sprite.onKeyPressed(e);
 		}
 	}
 	protected void onKeyReleased(KeyEvent e) {
 		handleOnKeReleased(e);
-		for(Sprite sprite : getAllSprites()) {
+		for(Sprite sprite : SpriteManager.getAllSprites()) {
 			sprite.onKeyReleased(e);
 		}
 		
 	}
 	protected void onMouseEvent(MouseEvent e) {
 		handleOnMouseEvent(e);
-		for(Sprite sprite : getAllSprites()) {
+		for(Sprite sprite : SpriteManager.getAllSprites()) {
 			sprite.onMouseEvent(e);
 		}
 		
@@ -205,5 +206,25 @@ public abstract class GameWorld extends SpriteManager {
 	}
 	protected void handleOnMouseEvent(MouseEvent e) {
 		
+	}
+	
+	public void addSprite(Sprite sprite) {
+		(new SpriteManager()).addSprite(sprite);
+	}
+	public void removeSprite(Sprite sprite) {
+		(new SpriteManager()).addSprite(sprite);
+	}
+	public void setGroup(Group group) {
+		(new SpriteManager()).setGroup(group);
+	}
+	public Group getGroup() {
+		return (new SpriteManager()).getGroup();
+	}
+	
+	public void shutdown() {
+		for(Sprite sprite : SpriteManager.getAllSprites() ) {
+			removeSprite(sprite);
+		}
+		SoundManager.shutdown();
 	}
 }

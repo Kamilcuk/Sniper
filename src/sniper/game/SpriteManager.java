@@ -18,7 +18,6 @@
 package sniper.game;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -27,13 +26,13 @@ import javafx.scene.Node;
  *
  * @author Kamil Cukrowski
  */
-public class SpriteManager extends Sprite {
+public class SpriteManager {
 	
 	/** All the sprite objects currently in play */
     private final static List<Sprite> SPRITES = new ArrayList<>();
 	
     /** All nodes to be displayed in the game window. */
-    protected static Group group = new Group();
+    private static Group group = new Group();
 	
 	/**
 	 * zwraca KOPIE listy wszystkich spritów
@@ -44,18 +43,10 @@ public class SpriteManager extends Sprite {
 		 * zmiany do listy chodząc po niej	*/
         return new ArrayList<Sprite>(SPRITES);
     }
-	/**
-     * Odświerza każdego sprita znajdującego się w świecie gry.
-     */
-    protected void updateSprites() {
-        for (Sprite sprite : getAllSprites()){
-            sprite.update();
-        }
-    }
  	/**
      * Odświerza każdego sprita znajdującego się w świecie gry.
      */
-    protected void preUpdateSprites() {
+    protected static void preUpdateSprites() {
         for (Sprite sprite : getAllSprites()){
             sprite.preUpdate();
         }
@@ -63,7 +54,7 @@ public class SpriteManager extends Sprite {
     /**
      * Sprawdza kolizję każdych dwóch spritów.
      */
-    protected void checkCollisions() {
+    protected static void checkCollisions() {
 		final List<Sprite> temp = getAllSprites();
 		for(int i=0;i<temp.size();i++) {
 			Sprite spriteA = temp.get(i);
@@ -74,7 +65,14 @@ public class SpriteManager extends Sprite {
 			}
 		}
     }
- 
+	/**
+     * Odświerza każdego sprita znajdującego się w świecie gry.
+     */
+    protected static void updateSprites() {
+        for (Sprite sprite : getAllSprites()){
+            sprite.update();
+        }
+    }
  	/**
      * Zwraca JavaFX group która się wyświetla
      * @return 
@@ -111,7 +109,7 @@ public class SpriteManager extends Sprite {
   
     /**
      * Dodaje sprity do managera.
-     * @param sprites
+     * @param sprite
      */
     public void addSprite(Sprite sprite) {
 		if ( sprite == null ) return;
@@ -122,7 +120,7 @@ public class SpriteManager extends Sprite {
  
     /**
      * Usuwa sprity z menagera.
-     * @param sprites
+     * @param sprite
      */
     public void removeSprite(Sprite sprite) {
 		if ( sprite == null ) return;
@@ -133,16 +131,11 @@ public class SpriteManager extends Sprite {
 		removeNodeFromScene(sprite.node);
 	}
 
-	public void spriteManagerUpdate() {
+	public static void spriteManagerUpdate() {
 		preUpdateSprites();
         // check for collision
 		checkCollisions();
 		// update actors
         updateSprites();
-	}
-	
-	@Override
-	public void update() {
-		
 	}
 }

@@ -41,7 +41,10 @@ public abstract class Sprite {
 	/** collision shape  */
     public Circle collisionBounds = null;
 	
-	
+	/**
+	* Funkcja służąca odświerzeniu obiektu.
+	* preUpdate jest odpalane przez sprawdzaniem kolizji, zaś update po sprawdzeniu kolizji.
+	*/
 	protected void preUpdate() {
 		
 	}
@@ -57,7 +60,9 @@ public abstract class Sprite {
     /**
 	 * Funkcja służąca odświarzeniu obiektu.
      */
-    public abstract void update();
+    public void update() {
+
+	}
  
 	/**
 	 * Jak blisko jest drugi sprite.
@@ -68,8 +73,7 @@ public abstract class Sprite {
 	public double jakBliskoCollide(Sprite other) {
 		//return ((ax > dx)||(bx < cx)||(ay > dy)||(by < cy)); <- dwa rectangli
 		if ( other.getClass().equals(WindowBound.class)) {
-			double dupa = ((WindowBound)other).jakBliskoCollide(this);
-			return dupa;
+			return ((WindowBound)other).jakBliskoCollide(this);
 		}
 		
         if (collisionBounds == null || other.collisionBounds == null) {
@@ -99,7 +103,7 @@ public abstract class Sprite {
         Circle thisSphere = collisionBounds;
         Point2D otherCenter = otherSphere.localToScene(otherSphere.getCenterX(), otherSphere.getCenterY());
         Point2D thisCenter = thisSphere.localToScene(thisSphere.getCenterX(), thisSphere.getCenterY());
-		return GetAngleOfLineBetweenTwoPoints(otherCenter, thisCenter);
+		return Helper.GetAngleOfLineBetweenTwoPoints(otherCenter, thisCenter);
 	}
 	
 	/**
@@ -109,7 +113,6 @@ public abstract class Sprite {
 	protected void onKeyPressed(final KeyEvent e) {
 		
 	}
-	
 	/**
 	 * Akcja w przypadku puszczenia klawisza na klawiaturze.
 	 * @param e 
@@ -117,7 +120,6 @@ public abstract class Sprite {
 	protected void onKeyReleased(final KeyEvent e) {
 		
 	}
-	
 	/**
 	 * Akcja w przypadku jakielkowiek akcji związanej z myszką.
 	 * @param e 
@@ -125,9 +127,15 @@ public abstract class Sprite {
 	protected void onMouseEvent(final MouseEvent e) {
 		
 	}
-	
-	public static double GetAngleOfLineBetweenTwoPoints(Point2D p1, Point2D p2) { 
-		//return new Point2D(1, 0).angle(p2.subtract(p1));
-		return Math.atan2(p1.getX() - p2.getX(), p1.getY() - p2.getY())*180/Math.PI;
+	/**
+	 * Zwraca punkt będący środkiem wyświetlanego node danego spritu, w przypadku
+	 * prawidłowo ustawionych ograniczeń w rodzicu danego noda;
+	 * @return 
+	 */
+	protected Point2D getMiddle() {
+		if ( node == null ) return new Point2D(0, 0);
+		return new Point2D(
+				node.getTranslateX()+node.getBoundsInLocal().getWidth()/2,
+				node.getTranslateY()+node.getBoundsInLocal().getHeight()/2 );
 	}
 }
