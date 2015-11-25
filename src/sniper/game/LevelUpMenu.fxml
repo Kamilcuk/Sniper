@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="LevelUpMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="151.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sniper.game.LevelUpMenuController">
+<AnchorPane id="LevelUpMenu" fx:id="LevelUpMenu" prefHeight="153.0" prefWidth="208.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sniper.game.LevelUpMenuController">
    <children>
-      <Label alignment="CENTER" prefHeight="14.0" prefWidth="175.0" text="Level Up Menu" textAlignment="CENTER" />
-      <Button mnemonicParsing="false" onAction="#buttonHpOnAction" prefHeight="22.0" prefWidth="191.0" text="Hp" />
-      <Button mnemonicParsing="false" onAction="#buttonHpRegenOnAction" prefHeight="22.0" prefWidth="184.0" text="Hp Regen" />
-      <Button mnemonicParsing="false" onAction="#buttonAttackOnAction" prefHeight="22.0" prefWidth="195.0" text="Attack" />
-      <Button mnemonicParsing="false" onAction="#buttonAttackSpeedOnAction" prefHeight="22.0" prefWidth="180.0" text="Attack Speed" />
-      <Button mnemonicParsing="false" onAction="#buttonWalkSpeedOnAction" prefHeight="22.0" prefWidth="160.0" text="Walk Speed" />
+      <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="14.0" prefWidth="175.0" text="Level Up Menu" textAlignment="CENTER" />
+      <Button layoutX="14.0" layoutY="28.0" mnemonicParsing="false" onAction="#buttonHpOnAction" prefHeight="22.0" prefWidth="175.0" text="Hp" />
+      <Button layoutX="14.0" layoutY="50.0" mnemonicParsing="false" onAction="#buttonHpRegenOnAction" prefHeight="22.0" prefWidth="175.0" text="Hp Regen" />
+      <Button layoutX="14.0" layoutY="72.0" mnemonicParsing="false" onAction="#buttonAttackOnAction" prefHeight="22.0" prefWidth="175.0" text="Attack" />
+      <Button layoutX="14.0" layoutY="94.0" mnemonicParsing="false" onAction="#buttonAttackSpeedOnAction" prefHeight="22.0" prefWidth="175.0" text="Attack Speed" />
+      <Button layoutX="14.0" layoutY="116.0" mnemonicParsing="false" onAction="#buttonWalkSpeedOnAction" prefHeight="22.0" prefWidth="175.0" text="Walk Speed" />
       <HBox prefHeight="0.0" prefWidth="129.0" />
    </children>
-</VBox>
+</AnchorPane>

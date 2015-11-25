@@ -83,6 +83,7 @@ public class SniperWorld1 extends GameWorld {
 				SpriteManager.removeNodeFromScene(node);
 				getGameLoop().play();
 			} else { //otwieramy nowe okno
+				if ( !getPlayer().canLevelUp() ) return; //jesli gracz nie moze levelowac
 				try {
 					node = FXMLLoader.load(getClass().getResource("LevelUpMenu.fxml"));
 					node.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-50);

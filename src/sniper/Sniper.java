@@ -21,6 +21,6 @@ import sniper.game.Game;
 
 public class Sniper {
     public static void main(String args[]) {   
-        new Game().run();
+         new Game().run();
     }
 }
