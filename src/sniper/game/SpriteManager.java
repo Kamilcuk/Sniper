@@ -41,27 +41,31 @@ public class SpriteManager {
     public static List<Sprite> getAllSprites() {
 		/* kopiuj liste. dzięki temu można wprowadzać 
 		 * zmiany do listy chodząc po niej	*/
-        return new ArrayList<Sprite>(SPRITES);
+        return new ArrayList<>(SPRITES);
     }
- 	/**
-     * Odświerza każdego sprita znajdującego się w świecie gry.
-     */
-    protected static void preUpdateSprites() {
-        for (Sprite sprite : getAllSprites()){
-            sprite.preUpdate();
-        }
-    }
+	
+	public static List<Sprite> getAllCollisionSprites() {
+		ArrayList<Sprite> temp = new ArrayList<>();
+		for(Sprite sprite : SPRITES) {
+			if ( sprite.collisionBounds != null 
+					|| sprite.getClass().equals(WindowBound.class) )
+				temp.add(sprite);
+		}
+		return temp;
+	}
     /**
      * Sprawdza kolizję każdych dwóch spritów.
      */
     protected static void checkCollisions() {
-		final List<Sprite> temp = getAllSprites();
-		for(int i=0;i<temp.size();i++) {
-			Sprite spriteA = temp.get(i);
-			for (int j=i+1;j<temp.size();j++) {
-				Sprite spriteB = temp.get(j);
-				spriteA.collide(spriteB);
-				spriteB.collide(spriteA);
+		final List<Sprite> sprites = getAllCollisionSprites();
+		// remove sprites without collisionBounds
+		for(int i=0;i<sprites.size();i++) {
+			Sprite spriteA = sprites.get(i);
+			for (int j=i+1;j<sprites.size();j++) {
+				Sprite spriteB = sprites.get(j);
+				double dist = spriteA.jakBliskoCollide(spriteB);
+				spriteA.collide(spriteB, dist);
+				spriteB.collide(spriteA, dist);
 			}
 		}
     }
@@ -69,9 +73,9 @@ public class SpriteManager {
      * Odświerza każdego sprita znajdującego się w świecie gry.
      */
     protected static void updateSprites() {
-        for (Sprite sprite : getAllSprites()){
-            sprite.update();
-        }
+		getAllSprites().stream().forEach((sprite) -> {
+			sprite.update();
+		});
     }
  	/**
      * Zwraca JavaFX group która się wyświetla
@@ -85,15 +89,15 @@ public class SpriteManager {
 	 * Ustawia JavaFX group.
      * @param group To jest "root container" tego co się wyświetla
      */
-    protected void setGroup(Group group) {
-        this.group = group;
+    protected static void setGroup(Group group) {
+        SpriteManager.group = group;
     }
 	
 	/** 
 	 * Dodaje node do wyświetlanej grupy
 	 * @param node 
 	 */
-	protected void addNodeToScene(Node node) {
+	protected static void addNodeToScene(Node node) {
 		if ( node != null )
 			getGroup().getChildren().add(node);
 	}
@@ -102,7 +106,7 @@ public class SpriteManager {
 	 * Usuwa node z wyświetlanej grupy
 	 * @param node 
 	 */
-	protected void removeNodeFromScene(Node node) {
+	protected static void removeNodeFromScene(Node node) {
 		if ( node != null )
 			getGroup().getChildren().remove(node);
 	}
@@ -111,7 +115,7 @@ public class SpriteManager {
      * Dodaje sprity do managera.
      * @param sprite
      */
-    public void addSprite(Sprite sprite) {
+    public static void addSprite(Sprite sprite) {
 		if ( sprite == null ) return;
 		if ( SPRITES.contains(sprite) ) return;
         SPRITES.add(sprite);
@@ -122,7 +126,7 @@ public class SpriteManager {
      * Usuwa sprity z menagera.
      * @param sprite
      */
-    public void removeSprite(Sprite sprite) {
+    public static void removeSprite(Sprite sprite) {
 		if ( sprite == null ) return;
 		if ( !SPRITES.contains(sprite) ) return;
         SPRITES.remove(sprite);
@@ -132,8 +136,6 @@ public class SpriteManager {
 	}
 
 	public static void spriteManagerUpdate() {
-		preUpdateSprites();
-        // check for collision
 		checkCollisions();
 		// update actors
         updateSprites();
