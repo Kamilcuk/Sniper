@@ -17,15 +17,23 @@
  */
 package sniper.game;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import sun.applet.Main;
 
 /**
  *
@@ -42,7 +50,6 @@ public class SniperWorld1 extends GameWorld {
         setScene(new Scene(getGroup(), 1024, 768));
         stage.setScene(getScene());
 		
-		
 		//background		
 		ImageView bg = new ImageView();
          bg.setImage(new Image("File:resources\\images\\terrain\\base_1.png"));
@@ -58,6 +65,7 @@ public class SniperWorld1 extends GameWorld {
 		Player player = new Player(
 				new Point2D(getScene().getWidth()/2,getScene().getHeight()/2));
 		addSprite(player);
+		setPlayer(player);
 		
 		// zombie manager
 		ZombieManager zombieManager = new ZombieManager(this, player);
@@ -69,13 +77,38 @@ public class SniperWorld1 extends GameWorld {
 	
 	@Override
 	protected void handleOnKeyPressed(KeyEvent e) {
-		if ( e.getCode() == KeyCode.SPACE ) {
-			if ( getGameLoop().getStatus() != Animation.Status.RUNNING )
+		if ( e.getCode() == KeyCode.L ) {
+			Node node = SpriteManager.getGroup().lookup("#LevelUpMenu");
+			if ( node != null ) { // okno juz jest otwarte, trzeba je zamknąć
+				SpriteManager.removeNodeFromScene(node);
 				getGameLoop().play();
-			if ( getGameLoop().getStatus() == Animation.Status.RUNNING )
-				getGameLoop().pause();
+			} else { //otwieramy nowe okno
+				try {
+					node = FXMLLoader.load(getClass().getResource("LevelUpMenu.fxml"));
+					node.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-50);
+						node.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-60);
+					SpriteManager.addNodeToScene(node);
+				} catch (IOException ex) {
+					Logger.getLogger(SniperWorld1.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
 		}
-		
+		if ( e.getCode() == KeyCode.ESCAPE ) {
+			Node node = SpriteManager.getGroup().lookup("#EscapeMenu");
+			if ( node != null ) { // okno juz jest otwarte, trzeba je zamknąć
+				SpriteManager.removeNodeFromScene(node);
+				getGameLoop().play();
+			} else { //otwieramy nowe okno
+				try {
+					node = FXMLLoader.load(getClass().getResource("EscapeMenu.fxml"));
+					node.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-50);
+						node.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-60);
+					SpriteManager.addNodeToScene(node);
+				} catch (IOException ex) {
+					Logger.getLogger(SniperWorld1.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		}
 	}
 	
 	@Override

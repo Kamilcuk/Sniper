@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="LevelUpMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="151.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sniper.game.LevelUpMenuController">
+   <children>
+      <Label alignment="CENTER" prefHeight="14.0" prefWidth="175.0" text="Level Up Menu" textAlignment="CENTER" />
+      <Button mnemonicParsing="false" onAction="#buttonHpOnAction" prefHeight="22.0" prefWidth="191.0" text="Hp" />
+      <Button mnemonicParsing="false" onAction="#buttonHpRegenOnAction" prefHeight="22.0" prefWidth="184.0" text="Hp Regen" />
+      <Button mnemonicParsing="false" onAction="#buttonAttackOnAction" prefHeight="22.0" prefWidth="195.0" text="Attack" />
+      <Button mnemonicParsing="false" onAction="#buttonAttackSpeedOnAction" prefHeight="22.0" prefWidth="180.0" text="Attack Speed" />
+      <Button mnemonicParsing="false" onAction="#buttonWalkSpeedOnAction" prefHeight="22.0" prefWidth="160.0" text="Walk Speed" />
+      <HBox prefHeight="0.0" prefWidth="129.0" />
+   </children>
+</VBox>
