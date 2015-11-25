@@ -29,13 +29,16 @@ public class ZombieKilledIndicator extends Sprite {
 	private final Label text = new Label();
 	
 	public ZombieKilledIndicator() {
-		text.setTranslateX(500);
+		text.setTranslateX(300);
 		text.setTranslateY(10);
 		node = text;
 	}
 	
 	@Override
 	public void update() {
-		text.setText(APPEND + ZombieManager.getDeadZombies());
+		Player pl = SniperWorld1.getPlayer();
+		String levelup = "";
+		if ( pl.canLevelUp() ) levelup = " NEW level! ";
+		text.setText(APPEND + ZombieManager.getDeadZombies() + " Player level: " + pl.getPlayerLevel() + levelup );
 	}
 }

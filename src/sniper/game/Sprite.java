@@ -41,19 +41,11 @@ public abstract class Sprite {
 	/** collision shape  */
     public Circle collisionBounds = null;
 	
-	/**
-	* Funkcja służąca odświerzeniu obiektu.
-	* preUpdate jest odpalane przez sprawdzaniem kolizji, zaś update po sprawdzeniu kolizji.
-	*/
-	protected void preUpdate() {
-		
-	}
-	
     /**
      * Zachowanie naszego sprite jeśli colliduje z drugim
      * @param other Inny sprite
      */
-    protected void collide(Sprite other) {
+    protected void collide(Sprite other, double distance) {
 		
     }
 	
@@ -71,8 +63,8 @@ public abstract class Sprite {
 	 * że dwa sprity zachodzą na siebie,
 	 */
 	public double jakBliskoCollide(Sprite other) {
-		//return ((ax > dx)||(bx < cx)||(ay > dy)||(by < cy)); <- dwa rectangli
-		if ( other.getClass().equals(WindowBound.class)) {
+		//return ((ax > dx)||(bx < cx)||(ay > dy)||(by < cy)); <- dwa rectangli  
+		if ( other.getClass().equals(WindowBound.class) ) {
 			return ((WindowBound)other).jakBliskoCollide(this);
 		}
 		

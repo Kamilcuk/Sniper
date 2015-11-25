@@ -21,10 +21,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.CacheHint;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 /**
@@ -32,7 +28,6 @@ import javafx.scene.shape.Circle;
  * @author Kamil Cukrowski
  */
 public class Zombie extends Sprite {
-	private final Player player;
 	private final ImageView obraz = new ImageView();
 	private boolean init = true;
 	
@@ -48,10 +43,8 @@ public class Zombie extends Sprite {
 	private int zombieAttackSpeed = 2000; //ms
 	
 	public Zombie(
-			final Player player,
 			final Point2D orig,
 			final int type) {
-		this.player = player;
 		this.type = type;
 		setType(type);
 		
@@ -63,7 +56,7 @@ public class Zombie extends Sprite {
         obraz.setCacheHint(CacheHint.SPEED);
 		
 		collisionBounds = new Circle();
-		collisionBounds.setRadius(20);
+		collisionBounds.setRadius(15);
 		
 		node = obraz;
 		
@@ -93,25 +86,25 @@ public class Zombie extends Sprite {
 		}
 		switch(type) {
 		case 0: // normal
-			imageSize = 40;			movingSpeed = 0.7;
+			imageSize = 40;			movingSpeed = 0.4;
 			hp = 100;				zombieAttack = 20;
 			zombieAttackSpeed = 2000; //ms
 			break;
 		case 1: // slow, big attack
-			image = Helper.overrideImage(image, 0., 1., 0.);
-			imageSize = 40;			movingSpeed = 0.5;
+			image = Helper.overrideImage(image, 1., 0., 1.);
+			imageSize = 40;			movingSpeed = 0.25;
 			hp = 50;				zombieAttack = 5;
 			zombieAttackSpeed = 1000; //ms
 			break;
 		case 2: // fast, small attack
 			image = Helper.overrideImage(image, 0., 0., 1.);
-			imageSize = 40;			movingSpeed = 3;
+			imageSize = 40;			movingSpeed = 2;
 			hp = 100;				zombieAttack = 20;
 			zombieAttackSpeed = 2000; //ms
 			break;
 		case 3: // big, life + big attack
 			image = Helper.overrideImage(image, 1., 0., 0.);
-			imageSize = 80;			movingSpeed = 1.5;
+			imageSize = 60;			movingSpeed = 0.9;
 			hp = 300;				zombieAttack = 30;
 			zombieAttackSpeed = 3000; //ms
 			break;
@@ -127,38 +120,32 @@ public class Zombie extends Sprite {
 	}
 
 	@Override
-	public void preUpdate() {
-		if ( jakBliskoCollide(player) > 200 ) {
-			return;
-		}
-		
-		// punkt srodka zombiaka wzgledem srodka playera
-		Point2D p = player.getMiddle()
-				.subtract(node.getTranslateX(), node.getTranslateY())
-				.subtract(imageSize/2, imageSize/2);
-		double angle = Math.atan2(p.getX(), -p.getY())*180/Math.PI;
-		
-		// update velocities to player
-		vX = movingSpeed*Math.sin(angle*Math.PI/180);
-		vY = -movingSpeed*Math.cos(angle*Math.PI/180);
-	}
-
-	@Override
-	public void collide(Sprite other) {
-		double dist = jakBliskoCollide(other);
-		if ( other.getClass().equals(WindowBound.class)) {
-			if ( init ) {
-				if ( dist > 200 ) {
+	public void collide(Sprite other, double distance) {
+		if ( other.getClass().equals(Zombie.class) ) return;
+		if ( init ) {
+			if ( other.getClass().equals(WindowBound.class) ) {
+				if ( distance > 20 ) {
 					init = false;
 				}
-			} else {
-				if ( dist < 10 ) {
+			} 
+		} else {
+			if ( other.getClass().equals(WindowBound.class) ) {
+				if ( distance < 10 ) {
 					vX = -vX;
 					vY = -vY;
 				}
+			} else if (other.getClass().equals(Player.class)) {
+				if ( distance > 300 ) {
+					return;
+				}
+				// punkt srodka zombiaka wzgledem srodka playera
+				double angle = Helper.GetAngleOfLineBetweenTwoPoints(other.getMiddle(), this.getMiddle());
+				// update velocities to player
+				vX = movingSpeed*Math.sin(angle*Math.PI/180);
+				vY = movingSpeed*Math.cos(angle*Math.PI/180);
 			}
 		}
-		if ( dist >= 0 ) return;
+		if ( distance >= 0 ) return;
 		if ( other.getClass().equals(Pocisk.class) ) {
 			Pocisk pocisk = (Pocisk) other;
 			hp = hp - (int)pocisk.getBulletAttack();
@@ -166,9 +153,9 @@ public class Zombie extends Sprite {
 			vX = 0;
 			vY = 0;
 		} else if ( other.getClass().equals(WindowBound.class) ) {
-			if ( !init && dist >= 300) {
+			if ( !init && distance <= -100) {
 				/* co ja tutaj robie? */
-				(new SpriteManager()).removeSprite(this);
+				SpriteManager.removeSprite(this);
 			}
 		}
 	}
@@ -177,13 +164,14 @@ public class Zombie extends Sprite {
 	public void update() {
 		if ( hp < 0 ) {
 			ZombieManager.addDeadZombie(this);
-			(new SpriteManager()).removeSprite(this);
+			SpriteManager.removeSprite(this);
 		}
 		
 		//rotate
-		if ( vX != 0 && vY != 0 )
+		if ( vX != 0 || vY != 0 ) {
 			node.setRotate(Math.atan2(vX, -vY)*180/Math.PI);
-		
+		}
+			
 		// move
 		node.setTranslateX(node.getTranslateX() + vX);
 		node.setTranslateY(node.getTranslateY() + vY);

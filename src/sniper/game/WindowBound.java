@@ -18,6 +18,7 @@
 package sniper.game;
 
 import javafx.geometry.Point2D;
+import javafx.scene.shape.Circle;
 
 /**
  * Specjalny sprite, który ma za zadanie przechowywać informację o tym
@@ -27,9 +28,10 @@ import javafx.geometry.Point2D;
  */
 public class WindowBound extends Sprite {
 	private static Point2D res = new Point2D(0,0);
-		
-	public void setResolution(Point2D res) {
-			this.res = res;
+	
+	public static void setResolution(Point2D res) {
+		if ( res != null )
+			WindowBound.res = res;
 	}
 	
 	public static Point2D getResolution() {
@@ -38,8 +40,8 @@ public class WindowBound extends Sprite {
 	
 	@Override
 	public double jakBliskoCollide(Sprite other) {
-		if ( other.node == null )
-			return Double.POSITIVE_INFINITY;
+		if ( other == null ) return Double.POSITIVE_INFINITY;
+		if ( other.node == null ) return Double.POSITIVE_INFINITY;
 		
 		double otherX = other.getMiddle().getX();
 		double otherY = other.getMiddle().getY();
@@ -48,16 +50,10 @@ public class WindowBound extends Sprite {
 		double mX = res.getX() - otherX;
 		double mY = res.getY() - otherY;
 		
-		if ( oX < 0 && oY < 0 && mX > 0 && mY > 0 ) return Math.sqrt(oX*oX+oY*oY);
-		if ( oX < 0 && oY > 0 && mX > 0 && mY < 0 ) return Math.sqrt(oX*oX+mY*mY);
-		if ( oX > 0 && oY > 0 && mX < 0 && mY > 0 ) return Math.sqrt(mX*mX+mY*mY);
-		if ( oX > 0 && oY < 0 && mX < 0 && mY > 0 ) return Math.sqrt(oY*oY+mY*mY);
+		if ( oX < 0 && oY < 0 && mX > 0 && mY > 0 ) return -Math.sqrt(oX*oX+oY*oY);
+		if ( oX < 0 && oY > 0 && mX > 0 && mY < 0 ) return -Math.sqrt(oX*oX+mY*mY);
+		if ( oX > 0 && oY > 0 && mX < 0 && mY < 0 ) return -Math.sqrt(mX*mX+mY*mY);
+		if ( oX > 0 && oY < 0 && mX < 0 && mY > 0 ) return -Math.sqrt(mX*mX+oY*oY);
 		return Math.min(Math.min(oX, oY),Math.min(mX, mY));
 	}
-	
-	@Override
-	public void update() {
-		
-	}
-	
 }
