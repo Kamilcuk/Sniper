@@ -29,9 +29,11 @@ public class ZombieManager extends Sprite {
 	private final Player player;
 	private static int aliveZombies = 0, deadZombies = 0;
 	private static int deadZombiesByType[] = new int[10];
+	private double nextTime = 0;
 	
 	/** config */
-	private final int maxZombies = 5;
+	private int maxZombies = 3;
+	private final int maxMaxZombies = 1000;
 	
 	public ZombieManager(
 			final GameWorld gameWorld,
@@ -39,7 +41,7 @@ public class ZombieManager extends Sprite {
 		this.gameWorld = gameWorld;
 		this.player = player;
 		
-		new SpriteManager().addSprite(new ZombieKilledIndicator());
+		SpriteManager.addSprite(new ZombieKilledIndicator());
 	}
 
 	/**
@@ -59,12 +61,12 @@ public class ZombieManager extends Sprite {
 	private void spawnZombie() {
 		Point2D origPoint = new Point2D(0,0);
 		Point2D res = WindowBound.getResolution();
-		final int of = 50;
+		final int of = 30;
 		
 		final int newType = Helper.Rnd(4);
 		
 		do {
-			switch(0) {//Helper.Rnd(4)) {
+			switch( Helper.Rnd(4)) {//Helper.Rnd(4)) {
 				case 0:
 					origPoint = new Point2D(          -of,   Helper.Rnd((int)res.getY()));
 					break;
@@ -72,10 +74,10 @@ public class ZombieManager extends Sprite {
 					origPoint = new Point2D(  Helper.Rnd((int)res.getX()),               -of);
 					break;
 				case 2:
-					origPoint = new Point2D(res.getX()-of, Helper.Rnd((int)res.getY()));
+					origPoint = new Point2D(res.getX()+of, Helper.Rnd((int)res.getY()));
 					break;
 				case 3:
-					origPoint = new Point2D(   Helper.Rnd((int)res.getX()),   res.getY()-of);
+					origPoint = new Point2D(   Helper.Rnd((int)res.getX()),   res.getY()+of);
 					break;
 			}
 			Point2D check = player.getMiddle().subtract(origPoint);
@@ -83,13 +85,21 @@ public class ZombieManager extends Sprite {
 				break;
 		} while(true);
 		
-		gameWorld.addSprite(new Zombie(player, origPoint, newType));
+		gameWorld.addSprite(new Zombie(origPoint, newType));
 		aliveZombies++;
 	}
 	
 	@Override
 	public void update() {
-		if ( aliveZombies < maxZombies+Math.sqrt(1*deadZombies) ) {
+		long currTime = System.nanoTime()/1000000;
+		if ( currTime >= nextTime ) {
+			nextTime = currTime +  5000;
+			maxZombies++;
+			if ( maxZombies > maxMaxZombies ) {
+				maxZombies = maxMaxZombies;
+			}
+		}
+		if ( aliveZombies < maxZombies+Math.sqrt(deadZombies) ) {
 			spawnZombie();
 		}
 	}
