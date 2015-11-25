@@ -45,7 +45,6 @@ public class Pocisk extends Sprite {
 		vX = bron.getBulletSpeed()*Math.sin(angle*Math.PI/180);
 		vY = -bron.getBulletSpeed()*Math.cos(angle*Math.PI/180);
 		
-		//node = circle;
 		collisionBounds = circle;
 		node = circle;
 	}
@@ -56,14 +55,13 @@ public class Pocisk extends Sprite {
 	}
 
 	@Override
-	protected void collide(Sprite other) {
-		double dist = jakBliskoCollide(other);
-		if ( dist >= 0 ) return;
+	protected void collide(Sprite other, double distance) {
+		if ( distance >= 0 ) return;
 		if ( other.getClass().equals(Zombie.class) ) {
-			(new SpriteManager()).removeSprite(this);
+			SpriteManager.removeSprite(this);
 		}
 		if ( other.getClass().equals(WindowBound.class) ) {
-			(new SpriteManager()).removeSprite(this);
+			SpriteManager.removeSprite(this);
 		}
 	}
 	

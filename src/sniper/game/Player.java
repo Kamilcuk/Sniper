@@ -35,15 +35,50 @@ public class Player extends Sprite {
 	private Point2D lastMousePos = new Point2D(0, 0);
 	private boolean strzelam;
 	private final ArrayList<String> INPUT = new ArrayList<String>();
+	private double nextRegeneration = 0;
  
-	/*  config */
-	private final int playerSpeed = 5;
+	/* init stats config */
 	private final int imageSize = 50;
 	private double playerHp = 100;
 	private int playerMaxHp = 100;
-	private double playerAtt = 1.0; // 100% obrażeń danej broni
-	private double playerDef = 0.9; // 90% obrażeń otrzyma
+	private double playerHpRegen = 1000; // dostajesz 1 hp na x ms
+	private double playerAttack = 1.0; // 100% obrażeń danej broni
+	private double playerAttackSpeed = 1.0; // przypiszenie w procentach w całościach
+	private int playerSpeed = 5;
+	private int playerLevel = 1;
+
+	public double getPlayerHpRegen() {
+		return playerHpRegen;
+	}
+
+	public int getPlayerSpeed() {
+		return playerSpeed;
+	}
+
+	public int getPlayerLevel() {
+		return playerLevel;
+	}
 	
+	public double getPlayerAttackSpeed() {
+		return playerAttackSpeed;
+	}
+	
+	public boolean canLevelUp() {
+		return playerLevel < Math.floor(Math.sqrt(ZombieManager.getDeadZombies()));
+	}
+	
+	public void levelUp(String var) {
+		if ( !canLevelUp() ) return;
+		switch(var){
+		case "playerHp":			playerMaxHp		*= 1.5;
+		case "playerHpRegen":		playerHpRegen	*= 0.95; break;
+		case "playerAttack":		playerAttack	*= 1.1; break;
+		case "playerAttackSpeed": playerAttackSpeed *= 0.95; break;
+		case "playerSpeed":			playerSpeed		*= 1.05; break;
+		default: System.out.println("ERROR IN Player.levelup string: " + var);
+		}
+		playerLevel++;
+	}
 	/**
 	 * Konstruktor objekty player
 	 * @param initPos
@@ -60,6 +95,8 @@ public class Player extends Sprite {
 		node = obraz;
 		
 		collisionBounds = new Circle(20);
+		collisionBounds.setTranslateX(obraz.getTranslateX()+imageSize/2);
+		collisionBounds.setTranslateY(obraz.getTranslateY()+imageSize/2);
 		
 		SoundManager.loadSoundEffects("player_hit0", "File:resources/sounds/player_hit_0.mp3");
 		SoundManager.loadSoundEffects("player_hit1", "File:resources/sounds/player_hit_1.mp3");
@@ -107,6 +144,8 @@ public class Player extends Sprite {
 	@Override
 	public void onMouseEvent(final MouseEvent e) {
 		lastMousePos = new Point2D(e.getX(), e.getY());
+		// updateRotation
+		obraz.setRotate(-Helper.GetAngleOfLineBetweenTwoPoints(getMiddle(), lastMousePos));
 		if ( e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() )
 			strzelam = true;
 		if ( e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() )
@@ -114,7 +153,7 @@ public class Player extends Sprite {
 	}
 
 	@Override
-	public void collide(Sprite other) {
+	public void collide(Sprite other, double distance) {
 		if ( other.getClass().equals(WindowBound.class)) {
 			// sprawdz czy nie wyjdziemy poza mapę
 			double offset = -imageSize/2+imageSize/10;
@@ -128,12 +167,10 @@ public class Player extends Sprite {
 			if ( obraz.getTranslateY()+imageSize+vY > res.getY()-offset && vY > 0 )
 				vY = res.getY() - offset - imageSize - obraz.getTranslateY();
 		}
-			
-		double dist = jakBliskoCollide(other);
-		if ( dist >= 0 ) return;
+		if ( distance >= 0 ) return;
 		if ( other.getClass().equals(Zombie.class) ) {
 			//playerHp = playerHp - ((Zombie)other).getZombieAttack()*((100-playerDef)/100);
-			double obrazenia = ((Zombie)other).getZombieAttack()*playerDef;
+			double obrazenia = ((Zombie)other).getZombieAttack();
 			playerHp = playerHp - obrazenia;
 			if ( obrazenia > 0 ) {
 				String str = "player_hit" + Helper.Rnd(2);
@@ -144,8 +181,14 @@ public class Player extends Sprite {
 	
 	@Override
 	public void update() {
-		// updateRotation
-		obraz.setRotate(-Helper.GetAngleOfLineBetweenTwoPoints(getMiddle(), lastMousePos));
+		// regeneration
+		long currTime = System.nanoTime()/1000000;
+		if ( currTime >= nextRegeneration ) {
+			nextRegeneration = currTime + playerHpRegen;
+			playerHp += 10;
+			if ( playerHp > playerMaxHp )
+				playerHp = playerMaxHp;
+		}
 		
 		if ( strzelam )
 			bron.strzel();
@@ -154,10 +197,10 @@ public class Player extends Sprite {
 		if  ( vY != 0 || vX != 0 ) {
 			obraz.setTranslateX(obraz.getTranslateX() + vX);
 			obraz.setTranslateY(obraz.getTranslateY() + vY);
-		}
 		
-		collisionBounds.setTranslateX(obraz.getTranslateX()+imageSize/2);
-		collisionBounds.setTranslateY(obraz.getTranslateY()+imageSize/2);
+			collisionBounds.setTranslateX(obraz.getTranslateX()+imageSize/2);
+			collisionBounds.setTranslateY(obraz.getTranslateY()+imageSize/2);
+		}
 	}
 	/**
 	 * pobiera wartość życia gracza.
@@ -184,7 +227,7 @@ public class Player extends Sprite {
 	 * Zwraca wartość współczynnika ataku gracza.
 	 * @return 
 	 */
-	public double getPlayerAtt() {
-		return playerAtt;
+	public double getPlayerAttack() {
+		return playerAttack;
 	}
 }

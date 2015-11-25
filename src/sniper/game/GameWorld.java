@@ -48,20 +48,21 @@ import javafx.scene.input.MouseEvent;
  * @author Kamil Cukrowski
  */
 public abstract class GameWorld {
- 
     /** The JavaFX Scene as the game surface */
     private Scene scene;
     /** The game loop using JavaFX's <code>Timeline</code> API.*/
-    private static Timeline gameLoop;
+    public static Timeline gameLoop;
 	
     /** Number of frames per second. */
     private final int framesPerSecond = 30;
   
 	private final WindowBound windowBound = new WindowBound();
 	
+	private static Player player;
+
+	
     /**
-     * Constructor that is called by the derived class. This will
-     * set the frames per second, title, and setup the game loop.
+     * Konstruktor wywoływany przez derywowaną klasę.
      */
     public GameWorld() {
         // create and set timeline for the game loop
@@ -69,7 +70,7 @@ public abstract class GameWorld {
     }
  
     /**
-     * Builds and sets the game loop ready to be started.
+     * Tworzy i ustawia gameloop.
      */
     protected final void buildAndSetGameLoop() {
         final Duration oneFrameAmt = Duration.millis(1000/getFramesPerSecond());
@@ -88,51 +89,45 @@ public abstract class GameWorld {
     }
  
     /**
-     * Initialize the game world by update the JavaFX Stage.
+     * Initializuje świat gry.
      * @param primaryStage
      */
     public abstract void initialize(final Stage primaryStage);
  
-    /**Kicks off (plays) the Timeline objects containing one key frame
-     * that simply runs indefinitely with each frame invoking a method
-     * to update sprite objects, check for collisions, and cleanup sprite
-     * objects.
-     *
+    /**
+	 * Włącza gameloop;
      */
     public void beginGameLoop() {
         getGameLoop().play();
     }
  
     /**
-     * Returns the frames per second.
-     * @return int The frames per second.
+     * Zwraca ilość ramek na sekundę.
+	 * @return 
      */
     protected int getFramesPerSecond() {
         return framesPerSecond;
     }
 
     /**
-     * The game loop (Timeline) which is used to update, check collisions, and
-     * cleanup sprite objects at every interval (fps).
-     * @return Timeline An animation running indefinitely representing the game
-     * loop.
+     * Zwraca gameLoop.
+	 * @return 
      */
     protected static Timeline getGameLoop() {
         return gameLoop;
     }
  
     /**
-     * The sets the current game loop for this game world.
-     * @param gameLoop Timeline object of an animation running indefinitely
-     * representing the game loop.
+	 * Ustawia aktualny gameLoop dla tego świata.
+     * @param gameLoop Objekt który działa nieskończenie długo i reprezentuje pętle gry.
      */
     protected static void setGameLoop(Timeline gameLoop) {
         GameWorld.gameLoop = gameLoop;
     }
  
     /**
-     * Returns the JavaFX Scene. This is called the game surface to
-     * allow the developer to add JavaFX Node objects onto the Scene.
+     * Zwraca objekt scnee  w JavaFX. To jest tak zwana powierzchnia gry,
+	 * na której można dodawać inne elementy.
      * @return
      */
     public Scene getScene() {
@@ -140,49 +135,41 @@ public abstract class GameWorld {
     }
  
     /**
-     * Sets the JavaFX Scene. This is called the game surface to
-     * allow the developer to add JavaFX Node objects onto the Scene.
+     * Ustawia scene gry. Przy okazji funkcja initializuje funkcje
+	 * odbierające wejścia myszy i klawiatury.
      * @param gameSurface The main game surface (JavaFX Scene).
      */
     protected void setScene(Scene gameSurface) {
         this.scene = gameSurface;
 		
-		windowBound.setResolution(new Point2D(getScene().getWidth(),getScene().getHeight()));
+		WindowBound.setResolution(new Point2D(getScene().getWidth(),getScene().getHeight()));
 		addSprite(windowBound);
 		
 		/** install event handlers */
-		scene.addEventHandler(KeyEvent.KEY_PRESSED,
-            new EventHandler<KeyEvent>()
-            {
-                public void handle(KeyEvent e)
-                {
-                    onKeyPressed(e);
-                }
-            });
-        scene.addEventHandler(KeyEvent.KEY_RELEASED,
-            new EventHandler<KeyEvent>()
-            {
-                public void handle(KeyEvent e)
-                {
-                    onKeyReleased(e);
-                }
-            });
-		scene.addEventHandler(MouseEvent.ANY,
-			new EventHandler<MouseEvent>()
-            {
-                public void handle(MouseEvent e)
-                {
-					onMouseEvent(e);
-                }
-            });
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent e) -> {
+			onKeyPressed(e);
+		});
+        scene.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent e) -> {
+			onKeyReleased(e);
+		});
+		scene.addEventHandler(MouseEvent.ANY, (MouseEvent e) -> {
+			onMouseEvent(e);
+		});
     }
-	
+	/**
+	 * Funkcja wywoływana w przypadku naciśnięcia klawisza klawiatury.
+	 * @param e 
+	 */
 	protected void onKeyPressed(KeyEvent e) {
 		handleOnKeyPressed(e);
 		for(Sprite sprite : SpriteManager.getAllSprites()) {
 			sprite.onKeyPressed(e);
 		}
 	}
+	/**
+	 * Funkcja wywoływana w przypadku odciśnięcia klawisza klawiatury.
+	 * @param e 
+	 */
 	protected void onKeyReleased(KeyEvent e) {
 		handleOnKeReleased(e);
 		for(Sprite sprite : SpriteManager.getAllSprites()) {
@@ -190,6 +177,10 @@ public abstract class GameWorld {
 		}
 		
 	}
+	/**
+	 * Funkcja wywoływana w przypadku dowolnej akcji myszy.
+	 * @param e 
+	 */
 	protected void onMouseEvent(MouseEvent e) {
 		handleOnMouseEvent(e);
 		for(Sprite sprite : SpriteManager.getAllSprites()) {
@@ -197,34 +188,74 @@ public abstract class GameWorld {
 		}
 		
 	}
-	
+	/**
+	 * Funkcja wywoływana po naciśnięciu klawisza klawiatury.
+	 * Istnieje celem przeładowania przez klasę dziedziczacą.
+	 * @param e 
+	 */
 	protected void handleOnKeyPressed(KeyEvent e) {
 		
 	}
+	/**
+	 * Funkcja wywoływana po odciśnięciu klawiasza klawiatury.
+	 * Istnieje celem przeładowania przez klasę dziedziczacą.
+	 * @param e 
+	 */
 	protected void handleOnKeReleased(KeyEvent e) {
 		
 	}
+	/**
+	 * Funkcja wywoływana po dowolnej akcji myszą.
+	 * Istnieje celem przeładowania przez klasę dziedziczacą.
+	 * @param e
+	*/
 	protected void handleOnMouseEvent(MouseEvent e) {
 		
 	}
-	
+	/**
+	 * Dodaje dany sprite do listy obsługiwanych spritów.
+	 * @param sprite 
+	 */
 	public void addSprite(Sprite sprite) {
 		(new SpriteManager()).addSprite(sprite);
 	}
+	/**
+	 * Usuwa sprite z listy obsługiwanych spritów.
+	 * @param sprite 
+	 */
 	public void removeSprite(Sprite sprite) {
 		(new SpriteManager()).addSprite(sprite);
 	}
+	/**
+	 * ustawia grupę wyświetlającą.
+	 * @param group 
+	 */
 	public void setGroup(Group group) {
 		(new SpriteManager()).setGroup(group);
 	}
+	/**
+	 * Zwraca grupę wyświetlającą.
+	 * @return 
+	 */
 	public Group getGroup() {
 		return (new SpriteManager()).getGroup();
 	}
-	
+	/**
+	 * Funkcja wykonująca czyszczenie po zakończeniu wyświetlania.
+	 */
 	public void shutdown() {
 		for(Sprite sprite : SpriteManager.getAllSprites() ) {
 			removeSprite(sprite);
 		}
 		SoundManager.shutdown();
+	}
+	
+	
+	public static Player getPlayer() {
+		return player;
+	}
+
+	protected static void setPlayer(Player player) {
+		GameWorld.player = player;
 	}
 }

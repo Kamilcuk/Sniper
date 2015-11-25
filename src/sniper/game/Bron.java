@@ -26,6 +26,7 @@ import javafx.scene.image.Image;
  */
 class Bron {
 	private final Player player;
+	private static int wystrzelonePociski = 0;
 
 	
 	private long nextTime;  // w ms
@@ -33,7 +34,7 @@ class Bron {
 	/* ustawienia broni */
 	private double bulletSpeed;
 	private double bulletAttack;
-	private int shootingSpeed; //ms?
+	private double shootingSpeed; //ms?
 	private Image playerImage;
 	
 	public Bron(final Player player) {
@@ -61,12 +62,13 @@ class Bron {
 	}
 	
 	public void strzel() {
+		wystrzelonePociski++;
 		final Point2D orig = player.getMiddle();
 		final double angle = player.node.getRotate();
 		long currTime = System.nanoTime()/1000000;
 		if ( currTime >= nextTime ) {
+			nextTime = currTime + (long)(shootingSpeed*player.getPlayerAttackSpeed());
 			(new SpriteManager()).addSprite(new Pocisk(this, orig, angle));
-			nextTime = currTime + shootingSpeed;
 		}
 	}
 	
@@ -75,6 +77,10 @@ class Bron {
 	}
 
 	public double getBulletAttack() {
-		return bulletAttack*player.getPlayerAtt();
+		return bulletAttack*player.getPlayerAttack();
+	}
+	
+	public static int getWystrzelonePociski() {
+		return wystrzelonePociski;
 	}
 }
