@@ -113,6 +113,6 @@ public class WindowBoundTest {
 		assertEquals(-Math.sqrt(50*50+50*50), instance.jakBliskoCollide(other), 0.0);
 		
 		other = (Sprite) new TestingSprite(new Point2D(-50, 150));
-		assertEquals(-Math.sqrt(50*50+50*50)+2, instance.jakBliskoCollide(other), 0.0);
+		assertEquals(-Math.sqrt(50*50+50*50)+6, instance.jakBliskoCollide(other), 0.0);
 	}
 }
