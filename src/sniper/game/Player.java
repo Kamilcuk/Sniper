@@ -17,12 +17,19 @@
  */
 package sniper.game;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import static sniper.game.GameWorld.getGameLoop;
 
 
 /**
@@ -36,6 +43,15 @@ public class Player extends Sprite {
 	private boolean strzelam;
 	private final ArrayList<String> INPUT = new ArrayList<String>();
 	private double nextRegeneration = 0;
+	private static double drogaPrzebyta = 0;
+
+	public static double getDrogaPrzebyta() {
+		return drogaPrzebyta;
+	}
+
+	public static void setDrogaPrzebyta(double drogaPrzebyta) {
+		Player.drogaPrzebyta = drogaPrzebyta;
+	}
  
 	/* init stats config */
 	private final int imageSize = 50;
@@ -64,7 +80,7 @@ public class Player extends Sprite {
 	}
 	
 	public boolean canLevelUp() {
-		return playerLevel < Math.floor(Math.sqrt(ZombieManager.getDeadZombies()));
+		return playerLevel < Math.floor(Math.sqrt(ZombieManager.getDeadZombies()/4));
 	}
 	
 	public void levelUp(String var) {
@@ -144,8 +160,7 @@ public class Player extends Sprite {
 	@Override
 	public void onMouseEvent(final MouseEvent e) {
 		lastMousePos = new Point2D(e.getX(), e.getY());
-		// updateRotation
-		obraz.setRotate(-Helper.GetAngleOfLineBetweenTwoPoints(getMiddle(), lastMousePos));
+		
 		if ( e.getEventType() == MouseEvent.MOUSE_PRESSED && e.isPrimaryButtonDown() )
 			strzelam = true;
 		if ( e.getEventType() == MouseEvent.MOUSE_RELEASED && !e.isPrimaryButtonDown() )
@@ -181,11 +196,34 @@ public class Player extends Sprite {
 	
 	@Override
 	public void update() {
+		
+		// updateRotation
+		obraz.setRotate(-Helper.GetAngleOfLineBetweenTwoPoints(getMiddle(), lastMousePos));
+		
+		if ( playerHp <= 0 ) {			
+			Node node = SpriteManager.getGroup().lookup("#EscapeMenu");
+			if ( node != null ) { // okno juz jest otwarte, trzeba je zamknąć
+				SpriteManager.removeNodeFromScene(node);
+				getGameLoop().play();
+			} else { //otwieramy nowe okno
+				try {
+					Parent parent = FXMLLoader.load(getClass().getResource("EscapeMenu.fxml"));
+					//parent.get
+					node = parent;
+					node.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-50);
+					node.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-60);
+					SpriteManager.addNodeToScene(node);
+				} catch (IOException ex) {
+					Logger.getLogger(SniperWorld1.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		}
+		
 		// regeneration
 		long currTime = System.nanoTime()/1000000;
 		if ( currTime >= nextRegeneration ) {
 			nextRegeneration = currTime + playerHpRegen;
-			playerHp += 10;
+			playerHp += 1;
 			if ( playerHp > playerMaxHp )
 				playerHp = playerMaxHp;
 		}
@@ -197,6 +235,7 @@ public class Player extends Sprite {
 		if  ( vY != 0 || vX != 0 ) {
 			obraz.setTranslateX(obraz.getTranslateX() + vX);
 			obraz.setTranslateY(obraz.getTranslateY() + vY);
+			drogaPrzebyta = Math.sqrt(vX*vX+vY*vY);
 		
 			collisionBounds.setTranslateX(obraz.getTranslateX()+imageSize/2);
 			collisionBounds.setTranslateY(obraz.getTranslateY()+imageSize/2);
