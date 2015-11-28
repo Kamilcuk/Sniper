@@ -11,7 +11,7 @@
    <children>
       <Button alignment="CENTER" layoutX="71.0" layoutY="245.0" mnemonicParsing="false" onAction="#buttonExit" prefHeight="28.0" prefWidth="98.0" text="Exit" />
       <Label fx:id="statystyki" alignment="TOP_CENTER" layoutX="-1.0" layoutY="70.0" prefHeight="176.0" prefWidth="241.0" text="Label" />
-      <Label alignment="CENTER" layoutX="-1.0" layoutY="14.0" prefHeight="28.0" prefWidth="241.0" text="PAUSE" />
-      <Button alignment="CENTER" layoutX="71.0" layoutY="42.0" mnemonicParsing="false" onAction="#buttonResume" prefHeight="28.0" prefWidth="98.0" text="Resume" />
+      <Label fx:id="labelPause" alignment="CENTER" layoutX="-1.0" layoutY="14.0" prefHeight="28.0" prefWidth="241.0" text="PAUSE" />
+      <Button fx:id="buttonResume" alignment="CENTER" layoutX="71.0" layoutY="42.0" mnemonicParsing="false" onAction="#buttonResume" prefHeight="28.0" prefWidth="98.0" text="Resume" />
    </children>
 </AnchorPane>

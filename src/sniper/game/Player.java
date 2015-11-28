@@ -28,6 +28,7 @@ import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import static sniper.game.GameWorld.getGameLoop;
 
@@ -194,29 +195,35 @@ public class Player extends Sprite {
 		}
 	}
 	
+	public void gameOverMenu() {
+		// to powinno sie chyba przenieść do SniperWorld1 ?
+		GameWorld.getGameLoop().pause();
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader();
+			fxmlLoader.setLocation(getClass().getResource("EscapeMenu.fxml"));
+			AnchorPane frame = fxmlLoader.load();
+			EscapeMenuController c = (EscapeMenuController) fxmlLoader.getController();
+			// zmień label na górze na GameOver
+			c.getLabelPause().setText("Game Over");
+			c.getButtonResume().setDisable(true);
+			// wyświetl na ekranie
+			frame.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-50);
+			frame.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-60);
+			SpriteManager.addNodeToScene(frame);
+		} catch (IOException ex) {
+			Logger.getLogger(SniperWorld1.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+	
 	@Override
 	public void update() {
 		
 		// updateRotation
 		obraz.setRotate(-Helper.GetAngleOfLineBetweenTwoPoints(getMiddle(), lastMousePos));
 		
-		if ( playerHp <= 0 ) {			
-			Node node = SpriteManager.getGroup().lookup("#EscapeMenu");
-			if ( node != null ) { // okno juz jest otwarte, trzeba je zamknąć
-				SpriteManager.removeNodeFromScene(node);
-				getGameLoop().play();
-			} else { //otwieramy nowe okno
-				try {
-					Parent parent = FXMLLoader.load(getClass().getResource("EscapeMenu.fxml"));
-					//parent.get
-					node = parent;
-					node.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-50);
-					node.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-60);
-					SpriteManager.addNodeToScene(node);
-				} catch (IOException ex) {
-					Logger.getLogger(SniperWorld1.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
+		if ( playerHp <= 0 ) {
+			gameOverMenu();
+			return;
 		}
 		
 		// regeneration

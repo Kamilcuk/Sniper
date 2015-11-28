@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
@@ -39,6 +40,10 @@ public class EscapeMenuController extends FXMLMenu implements Initializable {
 	private AnchorPane EscapeMenu;
 	@FXML
 	private Label statystyki;
+	@FXML
+	private Label labelPause;
+	@FXML
+	private Button buttonResume;
 	
 	/**
 	 * Initializes the controller class.
@@ -62,4 +67,11 @@ public class EscapeMenuController extends FXMLMenu implements Initializable {
 		exit();
 	}
 	
+	public Label getLabelPause() {
+		return labelPause;
+	}
+
+	public Button getButtonResume() {
+		return buttonResume;
+	}
 }
