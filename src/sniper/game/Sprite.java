@@ -22,6 +22,9 @@ import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 /**
  * Reprezentuje pojedynczy dowolnuy sprite.
@@ -39,7 +42,7 @@ public abstract class Sprite {
     public double vY = 0;
  
 	/** collision shape  */
-    public Circle collisionBounds = null;
+    public Shape collisionBounds = null;
 	
     /**
      * Zachowanie naszego sprite jeśli colliduje z drugim
@@ -60,42 +63,91 @@ public abstract class Sprite {
 	 * Jak blisko jest drugi sprite.
 	 * @param other Inny sprite.
 	 * @return Jeśli wartość mniejsza od zera, to znaczy,
-	 * że dwa sprity zachodzą na siebie,
+	 * że dwa sprity zachodzą na siebie !
 	 */
 	public double jakBliskoCollide(Sprite other) {
-		//return ((ax > dx)||(bx < cx)||(ay > dy)||(by < cy)); <- dwa rectangli  
-		if ( other.getClass().equals(WindowBound.class) ) {
+		if ( other instanceof WindowBound  ) {
 			return ((WindowBound)other).jakBliskoCollide(this);
 		}
 		
-        if (collisionBounds == null || other.collisionBounds == null) {
+        if ( this.collisionBounds == null || other.collisionBounds == null) {
             return Double.POSITIVE_INFINITY;
         }
-
-        // determine it's size
-        Circle otherSphere = other.collisionBounds;
-        Circle thisSphere = collisionBounds;
-        Point2D otherCenter = otherSphere.localToScene(otherSphere.getCenterX(), otherSphere.getCenterY());
-        Point2D thisCenter = thisSphere.localToScene(thisSphere.getCenterX(), thisSphere.getCenterY());
-        double dx = otherCenter.getX() - thisCenter.getX();
-        double dy = otherCenter.getY() - thisCenter.getY();
-        double distance = Math.sqrt(dx * dx + dy * dy);
-        double minDist = otherSphere.getRadius() + thisSphere.getRadius();
-
-        return (distance - minDist);
-	}
-	
-	public double jakiKatCollide(Sprite other) {
-		 if (collisionBounds == null || other.collisionBounds == null) {
-            return Double.POSITIVE_INFINITY;
-        }
-		 
-		// determine it's size
-        Circle otherSphere = other.collisionBounds;
-        Circle thisSphere = collisionBounds;
-        Point2D otherCenter = otherSphere.localToScene(otherSphere.getCenterX(), otherSphere.getCenterY());
-        Point2D thisCenter = thisSphere.localToScene(thisSphere.getCenterX(), thisSphere.getCenterY());
-		return Helper.GetAngleOfLineBetweenTwoPoints(otherCenter, thisCenter);
+		
+		if ( other.collisionBounds instanceof Circle  &&
+				this.collisionBounds instanceof Circle  ) {
+			// algorytm oblicza najmniejszą odległosć pomiędzy okręgami, którą zwraca.
+			Circle otherSphere = (Circle)other.collisionBounds;
+			Circle thisSphere = (Circle)collisionBounds;
+			Point2D otherCenter = otherSphere.localToScene(otherSphere.getCenterX(), otherSphere.getCenterY());
+			Point2D thisCenter = thisSphere.localToScene(thisSphere.getCenterX(), thisSphere.getCenterY());
+			double dx = otherCenter.getX() - thisCenter.getX();
+			double dy = otherCenter.getY() - thisCenter.getY();
+			double distance = Math.sqrt(dx * dx + dy * dy);
+			double minDist = otherSphere.getRadius() + thisSphere.getRadius();
+			return (distance - minDist);
+		} else if ( other.collisionBounds instanceof Rectangle  &&
+				this.collisionBounds instanceof Circle  ) {
+			// kolizja pomiędzy dwoma rectanglami
+			Rectangle rect1 = (Rectangle) other.collisionBounds;
+			Rectangle rect2 = (Rectangle) this.collisionBounds;
+			Shape shape = Shape.intersect(rect1, rect2);
+			boolean intersects = shape.getBoundsInLocal().getWidth() != -1;
+			if ( intersects ) {
+				return -1;
+			} else {
+				return 1;
+			}
+		} else if ( 
+				(
+					this.collisionBounds instanceof Line &&
+					other.collisionBounds instanceof Circle 
+				) || (
+					other.collisionBounds instanceof Line &&
+					this.collisionBounds instanceof Circle 
+				) ) {
+			// Kolizja między linią a okręgiem	
+			// zrobiona na potrzeby strzelania ze snajpy
+			Circle circle;
+			Line line;
+			if ( other.collisionBounds instanceof Circle ) {
+				circle = (Circle) other.collisionBounds;
+				line = (Line) this.collisionBounds;
+			} else {
+				circle = (Circle) this.collisionBounds;
+				line = (Line) other.collisionBounds;
+			}
+			Point2D A1 = new Point2D(line.getStartX(), line.getStartY());
+			Point2D A2 = new Point2D(line.getEndX(), line.getEndY());
+			Point2D P = circle.localToScene(circle.getCenterX(), circle.getCenterY());
+			// http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+			// x, y is your target point and x1, y1 to x2, y2 is your line segment. 
+			double A = P.getX() - A1.getX();
+			double B = P.getY() - A1.getY();
+			double C = A2.getX() - A1.getX();
+			double D = A2.getY() - A1.getY();
+			double dot = A * C + B * D;
+			double len_sq = C * C + D * D;
+			double param = -1;
+			if (len_sq != 0) //in case of 0 length line
+				param = dot / len_sq;
+			double xx, yy;
+			if (param < 0) {
+				xx = A1.getX();
+				yy = A1.getY();
+			} else if (param > 1) {
+				xx = A2.getX();
+				yy = A2.getY();
+			} else {
+				xx = A1.getX() + param * C;
+				yy = A1.getY() + param * D;
+			}
+			double dx = P.getX() - xx;
+			double dy = P.getY() - yy;
+			double odleglosc = Math.sqrt(dx * dx + dy * dy);
+			return odleglosc - circle.getRadius();
+		}
+        return Double.POSITIVE_INFINITY;
 	}
 	
 	/**

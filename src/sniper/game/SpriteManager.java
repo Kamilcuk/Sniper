@@ -64,8 +64,10 @@ public class SpriteManager {
 			for (int j=i+1;j<sprites.size();j++) {
 				Sprite spriteB = sprites.get(j);
 				double dist = spriteA.jakBliskoCollide(spriteB);
+				
 				spriteA.collide(spriteB, dist);
 				spriteB.collide(spriteA, dist);
+				
 			}
 		}
     }

@@ -66,10 +66,7 @@ public class SoundManager {
 	 * @param id plik dźwiękowego
 	 */
     public static void playSound(final String id) {
-        Runnable soundPlay = () -> {
-            soundEffectsMap.get(id).play();
-        };
-        soundPool.execute(soundPlay);
+		SoundManager.playSound(id, 0);
     }
 
 	/**

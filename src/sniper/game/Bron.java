@@ -17,6 +17,10 @@
  */
 package sniper.game;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 
@@ -25,50 +29,85 @@ import javafx.scene.image.Image;
  * @author Kamil Cukrowski
  */
 class Bron {
+	private TimeMeasurer timeMeasurer = new TimeMeasurer();
+	
 	private final Player player;
 	private static int wystrzelonePociski = 0;
-
-	
-	private long nextTime;  // w ms
 	
 	/* ustawienia broni */
+	private Class pociskClass;
 	private double bulletSpeed;
 	private double bulletAttack;
 	private double shootingSpeed; //ms?
 	private Image playerImage;
+	private String type;
+
+
 	
 	public Bron(final Player player) {
 		this.player = player;
-		nextTime = 0;
+		setType("Sniper");
 	}
 	
-	public void ustawBron(String typ) {
-		switch(typ) {
+	public void setType(String type) {
+		this.type = type;
+		switch(type) {
 			case "AK-47":
+				pociskClass = PociskAK47.class;
 		        playerImage = new Image("File:resources/weapon/AK-47/player.png");
-				bulletSpeed = 30;
+				bulletSpeed = 5;
 				bulletAttack = 50;
 				shootingSpeed = 100;
 				SoundManager.loadSoundEffects("shot", "File:resources/weapon/AK-47/shot.mp3");
 				SoundManager.loadSoundEffects("reload", "file:resources/weapon/AK-47/reload.mp3");
 				break;
+			case "Sniper":
+				pociskClass = PociskSniper.class;
+		        playerImage = new Image("File:resources/weapon/Sniper/player.png");
+				bulletSpeed = 50;
+				bulletAttack = 200;
+				shootingSpeed = 1000;
+				SoundManager.loadSoundEffects("shot", "File:resources/weapon/Sniper/shot.mp3");
+				SoundManager.loadSoundEffects("reload", "file:resources/weapon/Sniper/reload.mp3");
+				break;
 			default:
-				playerImage = null;
+				System.out.println("ERROR! Zly typ broni!");
+				Platform.exit();
+				break;
 		}
 	}
 	
+	public String getType() {
+		return type;
+	}
+
 	public Image getPlayerImage() {
 		return playerImage;
 	}
 	
 	public void strzel() {
 		wystrzelonePociski++;
-		final Point2D orig = player.getMiddle();
-		final double angle = player.node.getRotate();
-		long currTime = System.nanoTime()/1000000;
-		if ( currTime >= nextTime ) {
-			nextTime = currTime + (long)(shootingSpeed*player.getPlayerAttackSpeed());
-			(new SpriteManager()).addSprite(new Pocisk(this, orig, angle));
+		if ( timeMeasurer.runAfterTimeHasPassed( (long)(shootingSpeed*player.getPlayerAttackSpeed()) ) ) {
+			
+			// http://stackoverflow.com/questions/234600/can-i-use-class-newinstance-with-constructor-arguments
+			// JAVA like a pro!
+			final Point2D orig = player.getMiddle();
+			final double angle = player.node.getRotate();
+			Pocisk pocisk = null;
+			Class[] cArg = {double.class, double.class, String.class, Point2D.class, double.class};
+			try {
+				pocisk = (Pocisk)pociskClass
+						.getDeclaredConstructor(cArg)
+						.newInstance(
+								bulletSpeed, 
+								bulletAttack*player.getPlayerAttack(), 
+								type, orig, angle);
+			} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+				Logger.getLogger(Bron.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			if ( pocisk != null ) 
+				SpriteManager.addSprite(pocisk);
+			
 		}
 	}
 	

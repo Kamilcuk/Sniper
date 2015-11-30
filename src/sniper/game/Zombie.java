@@ -55,14 +55,18 @@ public class Zombie extends Sprite {
         obraz.setCache(true);
         obraz.setCacheHint(CacheHint.SPEED);
 		
-		collisionBounds = new Circle();
-		collisionBounds.setRadius(15);
+		Circle circle = new Circle();
+		circle.setCenterX(this.getMiddle().getX());
+		circle.setCenterY(this.getMiddle().getY());
+		circle.setRadius(13);
+		collisionBounds = circle;
 		
 		node = obraz;
 		
 		// init vX and vY - idziemy sobie troche krzywo do środka
 		Point2D p = WindowBound.getResolution().multiply(0.5).subtract(orig);
 		double angle = Math.atan2(p.getX(), -p.getY())*180/Math.PI;
+		angle = angle + Helper.Rnd(40);
 		node.setRotate(angle);
 		vX = movingSpeed*Math.sin(angle*Math.PI/180);
 		vY = -movingSpeed*Math.cos(angle*Math.PI/180);
@@ -121,20 +125,20 @@ public class Zombie extends Sprite {
 
 	@Override
 	public void collide(Sprite other, double distance) {
-		if ( other.getClass().equals(Zombie.class) ) return;
+		if ( other instanceof Zombie ) return;
 		if ( init ) {
-			if ( other.getClass().equals(WindowBound.class) ) {
+			if ( other instanceof WindowBound ) {
 				if ( distance > 20 ) {
 					init = false;
 				}
 			} 
 		} else {
-			if ( other.getClass().equals(WindowBound.class) ) {
+			if ( other instanceof WindowBound ) {
 				if ( distance < 10 ) {
 					vX = -vX;
 					vY = -vY;
 				}
-			} else if (other.getClass().equals(Player.class)) {
+			} else if ( other instanceof Player ) {
 				if ( distance > 300 ) {
 					return;
 				}
@@ -145,14 +149,16 @@ public class Zombie extends Sprite {
 				vY = movingSpeed*Math.cos(angle*Math.PI/180);
 			}
 		}
+		
 		if ( distance >= 0 ) return;
-		if ( other.getClass().equals(Pocisk.class) ) {
+		if ( other instanceof Pocisk ) {
 			Pocisk pocisk = (Pocisk) other;
 			hp = hp - (int)pocisk.getBulletAttack();
-		} else if ( other.getClass().equals(Player.class) ) {
+		} else if ( other instanceof Player ) {
+			if ( init ) return;
 			vX = 0;
 			vY = 0;
-		} else if ( other.getClass().equals(WindowBound.class) ) {
+		} else if ( other instanceof WindowBound ) {
 			if ( !init && distance <= -100) {
 				/* co ja tutaj robie? */
 				SpriteManager.removeSprite(this);

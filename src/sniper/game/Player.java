@@ -23,14 +23,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
-import static sniper.game.GameWorld.getGameLoop;
 
 
 /**
@@ -39,7 +36,7 @@ import static sniper.game.GameWorld.getGameLoop;
  */
 public class Player extends Sprite {
 	private final ImageView obraz = new ImageView();
-	private final Bron bron;
+	private final Bron bron = new Bron(this);
 	private Point2D lastMousePos = new Point2D(0, 0);
 	private boolean strzelam;
 	private final ArrayList<String> INPUT = new ArrayList<String>();
@@ -101,8 +98,6 @@ public class Player extends Sprite {
 	 * @param initPos
 	 */
 	public Player(final Point2D initPos) {
-		bron = new Bron(this);
-		bron.ustawBron("AK-47");
 		
 		obraz.setImage(bron.getPlayerImage());
 		obraz.setFitHeight(imageSize);
@@ -150,12 +145,18 @@ public class Player extends Sprite {
 			vX += -playerSpeed;
 		if ( INPUT.contains("D") )
 			vX += playerSpeed;
-		
 		if ( INPUT.contains("H") ) {
 			playerHp = 1000;
 			playerMaxHp = 1000;
 		}
-		
+		if ( INPUT.contains("E") ) {
+			if ( "AK-47".equals(bron.getType()) ) {
+				bron.setType("Sniper");
+			} else if ( "Sniper".equals(bron.getType()) ) {
+				bron.setType("AK-47");
+			}
+			obraz.setImage(bron.getPlayerImage());
+		}
 	}
 		
 	@Override

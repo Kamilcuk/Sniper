@@ -20,20 +20,16 @@ package sniper.game;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.Animation;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import sun.applet.Main;
 
 /**
  *
@@ -77,7 +73,7 @@ public class SniperWorld1 extends GameWorld {
 	
 	@Override
 	protected void handleOnKeyPressed(KeyEvent e) {
-		if ( e.getCode() == KeyCode.L ) {
+		if ( e.getCode() == KeyCode.F ) {
 			Node node = SpriteManager.getGroup().lookup("#LevelUpMenu");
 			if ( node != null ) { // okno juz jest otwarte, trzeba je zamknąć
 				SpriteManager.removeNodeFromScene(node);

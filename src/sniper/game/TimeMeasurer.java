@@ -17,32 +17,36 @@
  */
 package sniper.game;
 
-import javafx.geometry.Point2D;
-
 /**
- *
+ * Klasa służy wykonywaniu pewnej określonej akcji co określony czas.
  * @author Kamil Cukrowski
  */
-public abstract class Pocisk extends Sprite {
-	/** config */
-	protected final String bulletType;
-	protected final double bulletSpeed;
-	protected final double bulletAttack;
+public class TimeMeasurer {
+	private long nextTime = 0;
 	
-	public Pocisk(
-			double bulletSpeed,
-			double bulletAttack,
-			String bulletType,
-			final Point2D orig,
-			final double angle) {
-		this.bulletType = bulletType;
-		this.bulletAttack = bulletAttack;
-		this.bulletSpeed = bulletSpeed;
+	public TimeMeasurer(long timeToPass) {
+		nextTime = System.nanoTime()/1000000 + timeToPass;
+	}
+	
+	public TimeMeasurer() {
 		
-		SoundManager.playSound("shot");
 	}
 	
-	public double getBulletAttack() {
-		return bulletAttack;
+	/**
+	 * Funkcja sprawdza czy minął od ostatniego uruchomienia tej funkcji czas
+	 * podany w parametrze. Jeśli upłynął, zaczyna liczyć czas od momentu jej 
+	 * odpalenia oraz zwraca prawdę. Jeśli ten czas nie upłynął, zwraca fałsz.
+	 * @param timeToPass
+	 * @return 
+	 */
+	public boolean runAfterTimeHasPassed(long timeToPass) {
+		long currTime = System.nanoTime()/1000000;
+		if ( currTime >= nextTime ) {
+			nextTime = currTime +  timeToPass;
+			return true;
+		} else {
+			return false;
+		}
 	}
+	
 }

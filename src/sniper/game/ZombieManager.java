@@ -61,7 +61,7 @@ public class ZombieManager extends Sprite {
 	private void spawnZombie() {
 		Point2D origPoint = new Point2D(0,0);
 		Point2D res = WindowBound.getResolution();
-		final int of = 30;
+		final int of = 20;
 		
 		final int newType = Helper.Rnd(4);
 		
