@@ -29,7 +29,6 @@ public class Game extends Application {
 
 	/** świat naszej gry */
 	GameWorld gameWorld = new SniperWorld1();
-	
 	/**
 	 * Methoda implementowana przez javaFX Application
 	 */

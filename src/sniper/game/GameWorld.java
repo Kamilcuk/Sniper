@@ -48,6 +48,7 @@ import javafx.scene.input.MouseEvent;
  * @author Kamil Cukrowski
  */
 public abstract class GameWorld {
+
     /** The JavaFX Scene as the game surface */
     private Scene scene;
     /** The game loop using JavaFX's <code>Timeline</code> API.*/

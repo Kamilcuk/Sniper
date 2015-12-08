@@ -48,7 +48,7 @@ public class SniperWorld1 extends GameWorld {
 		
 		//background		
 		ImageView bg = new ImageView();
-         bg.setImage(new Image("File:resources\\images\\terrain\\base_1.png"));
+         bg.setImage(new Image("File:resources\\images\\terrain\\base_0.png"));
          bg.setPreserveRatio(false);
          bg.setFitWidth(WindowBound.getResolution().getX());
          bg.setFitHeight(WindowBound.getResolution().getY());

@@ -17,6 +17,8 @@
  */
 package sniper.game;
 
+import sniper.Sniper;
+
 /**
  * Klasa słóżąca wyświetlaniu statystyki gry
  * @author Kamil Cukrowski
@@ -33,6 +35,11 @@ public class StatystykaGry {
 	}
 	
 	public static String getText() {
-		return "Statystyka gry:\n";
+             long stop = System.currentTimeMillis();
+		return "   Statystyka gry:\n" + "Zabite zombie:  " 
+                        + ZombieManager.getDeadZombies() + "\n"+ "Przebyta droga:  " 
+                        + Player.getDrogaPrzebyta() + "\n" + "Czas gry:  " 
+                        + ((stop-Sniper.start)/1000) + "\n"
+                        + "Wystrzelone pociski:  " + Bron.getWystrzelonePociski();
 	}
 }

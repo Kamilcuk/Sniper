@@ -60,7 +60,7 @@ public class EscapeMenuController extends FXMLMenu implements Initializable {
 	private void buttonExit(ActionEvent event) {
 		Platform.exit();
 	}
-
+        
 	@FXML
 	private void buttonResume(ActionEvent event) {
 		GameWorld.getGameLoop().play();

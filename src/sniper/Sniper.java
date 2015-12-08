@@ -20,7 +20,8 @@ package sniper;
 import sniper.game.Game;
 
 public class Sniper {
-    public static void main(String args[]) {   
-         new Game().run();
-    }
+    public static final long start = System.currentTimeMillis();
+   public static void main(String args[]) { 
+      new Game().run();
+ }
 }

@@ -51,6 +51,7 @@ public class ZombieManager extends Sprite {
 	 */
 	public static void addDeadZombie(Zombie zombie) {
 		deadZombies++;
+                System.out.println("zombie"+ deadZombies);
 		aliveZombies--;
 		deadZombiesByType[zombie.getType()]++;
 	}

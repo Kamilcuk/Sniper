@@ -24,10 +24,12 @@ import javafx.scene.control.ProgressBar;
  * @author Kamil Cukrowski
  */
 public class PlayerHpBar extends Sprite {
+        
 	private final Player player;
 	private final ProgressBar progressBar = new ProgressBar();
 	public PlayerHpBar(Player player) {
 		this.player = player;
+                progressBar.setStyle("-fx-accent: red"); //czerwony pasek
 		progressBar.setTranslateX(3);
 		progressBar.setTranslateY(3);
 		node = progressBar;

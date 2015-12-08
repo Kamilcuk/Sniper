@@ -44,7 +44,7 @@ public class Player extends Sprite {
 	private static double drogaPrzebyta = 0;
 
 	public static double getDrogaPrzebyta() {
-		return drogaPrzebyta;
+		return (int)drogaPrzebyta;
 	}
 
 	public static void setDrogaPrzebyta(double drogaPrzebyta) {
@@ -243,7 +243,7 @@ public class Player extends Sprite {
 		if  ( vY != 0 || vX != 0 ) {
 			obraz.setTranslateX(obraz.getTranslateX() + vX);
 			obraz.setTranslateY(obraz.getTranslateY() + vY);
-			drogaPrzebyta = Math.sqrt(vX*vX+vY*vY);
+			drogaPrzebyta = drogaPrzebyta+Math.sqrt(vX*vX+vY*vY)/100;
 		
 			collisionBounds.setTranslateX(obraz.getTranslateX()+imageSize/2);
 			collisionBounds.setTranslateY(obraz.getTranslateY()+imageSize/2);

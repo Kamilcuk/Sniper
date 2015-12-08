@@ -32,7 +32,7 @@ class Bron {
 	private TimeMeasurer timeMeasurer = new TimeMeasurer();
 	
 	private final Player player;
-	private static int wystrzelonePociski = 0;
+	private static int wystrzelonePociski = 0;     
 	
 	/* ustawienia broni */
 	private Class pociskClass;
@@ -55,9 +55,9 @@ class Bron {
 			case "AK-47":
 				pociskClass = PociskAK47.class;
 		        playerImage = new Image("File:resources/weapon/AK-47/player.png");
-				bulletSpeed = 5;
+				bulletSpeed = 20;
 				bulletAttack = 50;
-				shootingSpeed = 100;
+				shootingSpeed = 200;
 				SoundManager.loadSoundEffects("shot", "File:resources/weapon/AK-47/shot.mp3");
 				SoundManager.loadSoundEffects("reload", "file:resources/weapon/AK-47/reload.mp3");
 				break;
@@ -86,9 +86,10 @@ class Bron {
 	}
 	
 	public void strzel() {
-		wystrzelonePociski++;
+		
 		if ( timeMeasurer.runAfterTimeHasPassed( (long)(shootingSpeed*player.getPlayerAttackSpeed()) ) ) {
-			
+			wystrzelonePociski++;
+                        System.out.println("pocisk"+ wystrzelonePociski);
 			// http://stackoverflow.com/questions/234600/can-i-use-class-newinstance-with-constructor-arguments
 			// JAVA like a pro!
 			final Point2D orig = player.getMiddle();
