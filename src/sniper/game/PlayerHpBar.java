@@ -30,9 +30,11 @@ public class PlayerHpBar extends Sprite {
 	private final ProgressBar progressBar = new ProgressBar();
 	public PlayerHpBar(Player player) {
 		this.player = player;
+		progressBar.setTranslateX(13);
                 progressBar.setStyle("-fx-accent: red"); //czerwony pasek
 		progressBar.setTranslateX(3);
 		progressBar.setTranslateY(3);
+		progressBar.setStyle(" -fx-accent: red; ");
 		node = progressBar;
 	}
 
