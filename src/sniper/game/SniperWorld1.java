@@ -48,7 +48,7 @@ public class SniperWorld1 extends GameWorld {
 		
 		//background		
 		ImageView bg = new ImageView();
-         bg.setImage(new Image("File:resources\\images\\terrain\\base_0.png"));
+		 bg.setImage(new Image("File:resources\\images\\terrain\\base_" + Helper.Rnd(3) + ".png"));		
          bg.setPreserveRatio(false);
          bg.setFitWidth(WindowBound.getResolution().getX());
          bg.setFitHeight(WindowBound.getResolution().getY());
@@ -98,8 +98,6 @@ public class SniperWorld1 extends GameWorld {
 			} else { //otwieramy nowe okno
 				try {
 					node = FXMLLoader.load(getClass().getResource("EscapeMenu.fxml"));
-					node.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-50);
-						node.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-60);
 					SpriteManager.addNodeToScene(node);
 				} catch (IOException ex) {
 					Logger.getLogger(SniperWorld1.class.getName()).log(Level.SEVERE, null, ex);

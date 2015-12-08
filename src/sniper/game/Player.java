@@ -52,7 +52,7 @@ public class Player extends Sprite {
 	}
  
 	/* init stats config */
-	private final int imageSize = 50;
+	private final int imageSize = 75;
 	private double playerHp = 100;
 	private int playerMaxHp = 100;
 	private double playerHpRegen = 1000; // dostajesz 1 hp na x ms
@@ -78,7 +78,7 @@ public class Player extends Sprite {
 	}
 	
 	public boolean canLevelUp() {
-		return playerLevel < Math.floor(Math.sqrt(ZombieManager.getDeadZombies()/4));
+		return playerLevel < Math.floor(Math.sqrt(ZombieManager.getDeadZombies()/2));
 	}
 	
 	public void levelUp(String var) {
@@ -106,7 +106,7 @@ public class Player extends Sprite {
 		obraz.setTranslateY(initPos.getY()-imageSize/2);
 		node = obraz;
 		
-		collisionBounds = new Circle(20);
+		collisionBounds = new Circle(imageSize/4);
 		collisionBounds.setTranslateX(obraz.getTranslateX()+imageSize/2);
 		collisionBounds.setTranslateY(obraz.getTranslateY()+imageSize/2);
 		

@@ -36,7 +36,7 @@ public class Zombie extends Sprite {
 	
 	/** config */
 	private final int type;
-	private int imageSize = 50;
+	private int imageSize = 75;
 	private double movingSpeed = 1;
 	private int hp = 100;
 	private int zombieAttack = 20;
@@ -55,10 +55,9 @@ public class Zombie extends Sprite {
         obraz.setCache(true);
         obraz.setCacheHint(CacheHint.SPEED);
 		
-		Circle circle = new Circle();
+		Circle circle = new Circle(imageSize/4);
 		circle.setCenterX(this.getMiddle().getX());
 		circle.setCenterY(this.getMiddle().getY());
-		circle.setRadius(13);
 		collisionBounds = circle;
 		
 		node = obraz;

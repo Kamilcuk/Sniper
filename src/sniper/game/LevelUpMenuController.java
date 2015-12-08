@@ -43,6 +43,12 @@ public class LevelUpMenuController extends FXMLMenu implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 		// TODO
 		nodeName = LevelUpMenu.getId();
+		
+		double X = LevelUpMenu.getBoundsInLocal().getHeight();
+		double Y = 208; //LevelUpMenu.getBoundsInLocal().getWidth(); // Czemu nie działa?
+		LevelUpMenu.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-X/2);
+		LevelUpMenu.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-Y/2);
+		
 		GameWorld.getGameLoop().pause();
 	}
 	
