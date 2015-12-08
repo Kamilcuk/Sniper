@@ -66,7 +66,7 @@ public class SoundManager {
 	 * @param id plik dźwiękowego
 	 */
     public static void playSound(final String id) {
-		SoundManager.playSound(id, 0);
+		SoundManager.playSound(id, 100);
     }
 
 	/**

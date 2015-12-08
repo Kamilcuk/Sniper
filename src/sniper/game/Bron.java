@@ -55,7 +55,7 @@ class Bron {
 			case "AK-47":
 				pociskClass = PociskAK47.class;
 		        playerImage = new Image("File:resources/weapon/AK-47/player.png");
-				bulletSpeed = 5;
+				bulletSpeed = 40;
 				bulletAttack = 50;
 				shootingSpeed = 100;
 				SoundManager.loadSoundEffects("shot", "File:resources/weapon/AK-47/shot.mp3");

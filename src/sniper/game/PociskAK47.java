@@ -49,9 +49,6 @@ public class PociskAK47 extends Pocisk {
 
 	@Override
 	protected void collide(Sprite other, double distance) {
-		if ( other instanceof Zombie ) {
-			System.out.println(distance);
-		}
 		if ( distance >= 0 ) return;
 		if ( other instanceof Zombie ) {
 			SpriteManager.removeSprite(this);

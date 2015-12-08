@@ -18,6 +18,7 @@
 package sniper.game;
 
 import javafx.scene.control.ProgressBar;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -28,8 +29,9 @@ public class PlayerHpBar extends Sprite {
 	private final ProgressBar progressBar = new ProgressBar();
 	public PlayerHpBar(Player player) {
 		this.player = player;
-		progressBar.setTranslateX(3);
+		progressBar.setTranslateX(13);
 		progressBar.setTranslateY(3);
+		progressBar.setStyle(" -fx-accent: red; ");
 		node = progressBar;
 	}
 

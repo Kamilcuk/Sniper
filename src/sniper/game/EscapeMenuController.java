@@ -52,6 +52,12 @@ public class EscapeMenuController extends FXMLMenu implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 		// TODO
 		nodeName = EscapeMenu.getId();
+		// umiesc się na środku ekranu
+		double X = EscapeMenu.getBoundsInLocal().getHeight();
+		double Y = 275; //EscapeMenu.getBoundsInLocal().getWidth(); Czemu nie działa?
+		EscapeMenu.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-X/2);
+		EscapeMenu.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-Y/2);
+		// pausuj gameWorld
 		GameWorld.getGameLoop().pause();
 		statystyki.setText(StatystykaGry.getText());
 	}	
