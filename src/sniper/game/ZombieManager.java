@@ -25,91 +25,100 @@ import javafx.geometry.Point2D;
  */
 public class ZombieManager extends Sprite {
 
-	private final GameWorld gameWorld;
-	private final Player player;
-	private static int aliveZombies = 0, deadZombies = 0;
-	private static int deadZombiesByType[] = new int[10];
-	private double nextTime = 0;
-	
-	/** config */
-	private int maxZombies = 3;
-	private final int maxMaxZombies = 1000;
-	
-	public ZombieManager(
-			final GameWorld gameWorld,
-			final Player player) {
-		this.gameWorld = gameWorld;
-		this.player = player;
-		
-		SpriteManager.addSprite(new ZombieKilledIndicator());
-	}
+    private TimeMeasurer timeMeasurer = new TimeMeasurer();
+    private final GameWorld gameWorld;
+    private final Player player;
+    private static int aliveZombies = 0, deadZombies = 0;
+    private static int deadZombiesByType[] = new int[10];
+    private double nextTime = 0;
 
-	/**
-	 * dodaje martwego zombiaka do ilości martwych
-	 * funkcja wywoływana przez objeck Zombie gdy zombiak umiera
-	 * @param zombie 
-	 */
-	public static void addDeadZombie(Zombie zombie) {
-		deadZombies++;
-                System.out.println("zombie"+ deadZombies);
-		aliveZombies--;
-		deadZombiesByType[zombie.getType()]++;
-	}
-	
-	/**
-	 * dodaje jednego zombiaka do gry
-	 */
-	private void spawnZombie() {
-		Point2D origPoint = new Point2D(0,0);
-		Point2D res = WindowBound.getResolution();
-		final int of = 20;
-		
-		final int newType = Helper.Rnd(4);
-		
-		do {
-			switch( Helper.Rnd(4)) {//Helper.Rnd(4)) {
-				case 0:
-					origPoint = new Point2D(          -of,   Helper.Rnd((int)res.getY()));
-					break;
-				case 1:
-					origPoint = new Point2D(  Helper.Rnd((int)res.getX()),               -of);
-					break;
-				case 2:
-					origPoint = new Point2D(res.getX()+of, Helper.Rnd((int)res.getY()));
-					break;
-				case 3:
-					origPoint = new Point2D(   Helper.Rnd((int)res.getX()),   res.getY()+of);
-					break;
-			}
-			Point2D check = player.getMiddle().subtract(origPoint);
-			if ( !( Math.abs(check.getX()) < 100 && Math.abs(check.getY()) < 100 ) )
-				break;
-		} while(true);
-		
-		gameWorld.addSprite(new Zombie(origPoint, newType));
-		aliveZombies++;
-	}
-	
-	@Override
-	public void update() {
-		long currTime = System.nanoTime()/1000000;
-		if ( currTime >= nextTime ) {
-			nextTime = currTime +  5000;
-			maxZombies++;
-			if ( maxZombies > maxMaxZombies ) {
-				maxZombies = maxMaxZombies;
-			}
-		}
-		if ( aliveZombies < maxZombies+Math.sqrt(deadZombies) ) {
-			spawnZombie();
-		}
-	}
-	
-	/**
-	 * pobiera ilość zabitych zobiaków
-	 * @return 
-	 */
-	static int getDeadZombies() {
-		return deadZombies;
-	}
+    /**
+     * config
+     */
+    private int maxZombies = 3;
+    private final int maxMaxZombies = 1000;
+
+    public ZombieManager(
+            final GameWorld gameWorld,
+            final Player player) {
+        this.gameWorld = gameWorld;
+        this.player = player;
+        
+        aliveZombies = 0;
+        deadZombies = 0;
+        deadZombiesByType = new int[10];
+        
+        
+        SpriteManager.addSprite(new ZombieKilledIndicator());
+    }
+
+    /**
+     * dodaje martwego zombiaka do ilości martwych funkcja wywoływana przez
+     * objeck Zombie gdy zombiak umiera
+     *
+     * @param zombie
+     */
+    public static void addDeadZombie(Zombie zombie) {
+        deadZombies++;
+        System.out.println("zombie" + deadZombies);
+        aliveZombies--;
+        deadZombiesByType[zombie.getType()]++;
+    }
+
+    /**
+     * dodaje jednego zombiaka do gry
+     */
+    private void spawnZombie() {
+        Point2D origPoint = new Point2D(0, 0);
+        Point2D res = WindowBound.getResolution();
+        final int of = 20;
+
+        final int newType = Helper.Rnd(4);
+
+        do {
+            switch (Helper.Rnd(4)) {//Helper.Rnd(4)) {
+                case 0:
+                    origPoint = new Point2D(-of, Helper.Rnd((int) res.getY()));
+                    break;
+                case 1:
+                    origPoint = new Point2D(Helper.Rnd((int) res.getX()), -of);
+                    break;
+                case 2:
+                    origPoint = new Point2D(res.getX() + of, Helper.Rnd((int) res.getY()));
+                    break;
+                case 3:
+                    origPoint = new Point2D(Helper.Rnd((int) res.getX()), res.getY() + of);
+                    break;
+            }
+            Point2D check = player.getMiddle().subtract(origPoint);
+            if (!(Math.abs(check.getX()) < 100 && Math.abs(check.getY()) < 100)) {
+                break;
+            }
+        } while (true);
+
+        SpriteManager.addSprite(new Zombie(origPoint, newType));
+        aliveZombies++;
+    }
+
+    @Override
+    public void update() {
+        if (timeMeasurer.runAfterTimeHasPassed(5000)) {
+            maxZombies++;
+            if (maxZombies > maxMaxZombies) {
+                maxZombies = maxMaxZombies;
+            }
+        }
+        if (aliveZombies < 1){ // maxZombies + Math.sqrt(deadZombies)) {
+            spawnZombie();
+        }
+    }
+
+    /**
+     * pobiera ilość zabitych zobiaków
+     *
+     * @return
+     */
+    static int getDeadZombies() {
+        return deadZombies;
+    }
 }

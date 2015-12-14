@@ -25,53 +25,60 @@ import java.util.concurrent.Executors;
 
 /**
  * Odpowiedzialne za odwarzanie muzyki.
+ *
  * @author Kamil Cukrowski
  */
 public class SoundManager {
+
     private static ExecutorService soundPool = Executors.newFixedThreadPool(100);
     private static final Map<String, AudioClip> soundEffectsMap = new HashMap<>();
-	
-	/**
-	 * Ustawia ilość threadów odpowiedzzialnych za odtwarzanie muzyki.
-	 * @param numberOfThreads 
-	 */
-	public static void setNumberOfThreads(int numberOfThreads) {
-        soundPool = Executors.newFixedThreadPool(numberOfThreads);
-	}
 
-	/**
-	 * przypisuje id określonemu dźwiękowi.
-	 * @param id
-	 * @param fileName ścieżka do pliku dźwiękowego
-	 */
+    /**
+     * Ustawia ilość threadów odpowiedzzialnych za odtwarzanie muzyki.
+     *
+     * @param numberOfThreads
+     */
+    public static void setNumberOfThreads(int numberOfThreads) {
+        soundPool = Executors.newFixedThreadPool(numberOfThreads);
+    }
+
+    /**
+     * przypisuje id określonemu dźwiękowi.
+     *
+     * @param id
+     * @param fileName ścieżka do pliku dźwiękowego
+     */
     public static void loadSoundEffects(String id, String fileName) {
-		//URL url = getClass().getClassLoader().getResource(fileName);
+        //URL url = getClass().getClassLoader().getResource(fileName);
         AudioClip sound = new AudioClip(fileName);
         soundEffectsMap.put(id, sound);
     }
 
-	/**
-	 * Odtwarza wcześniej przypisaną id muzykę z ustawioną głośnością;
-	 * @param id pliku dźwiękowego
-	 * @param volume głośćność
-	 */
+    /**
+     * Odtwarza wcześniej przypisaną id muzykę z ustawioną głośnością;
+     *
+     * @param id pliku dźwiękowego
+     * @param volume głośćność
+     */
     public static void playSound(final String id, double volume) {
         Runnable soundPlay = () -> {
             soundEffectsMap.get(id).play(volume);
         };
         soundPool.execute(soundPlay);
     }
-	/**
-	 * Odtwarza wcześniej przypisaną id muzykę z defaultową głośnością.
-	 * @param id plik dźwiękowego
-	 */
+
+    /**
+     * Odtwarza wcześniej przypisaną id muzykę z defaultową głośnością.
+     *
+     * @param id plik dźwiękowego
+     */
     public static void playSound(final String id) {
-		SoundManager.playSound(id, 100);
+        SoundManager.playSound(id, 100);
     }
 
-	/**
-	 * Wyłącza
-	 */
+    /**
+     * Wyłącza
+     */
     public static void shutdown() {
         soundPool.shutdown();
     }

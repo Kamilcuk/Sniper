@@ -18,42 +18,55 @@
 package sniper.game;
 
 import javafx.geometry.Point2D;
-import javafx.scene.shape.Circle;
 
 /**
- * Specjalny sprite, który ma za zadanie przechowywać informację o tym
- * jak duży jest ekran. Oraz sprawdzać kolizję, czy dany sprite
- * wychodzi poza ekran
+ * Specjalny sprite, który ma za zadanie przechowywać informację o tym jak duży
+ * jest ekran. Oraz sprawdzać kolizję, czy dany sprite wychodzi poza ekran
+ *
  * @author Kamil Cukrowski
  */
 public class WindowBound extends Sprite {
-	private static Point2D res = new Point2D(0,0);
-	
-	public static void setResolution(Point2D res) {
-		if ( res != null )
-			WindowBound.res = res;
-	}
-	
-	public static Point2D getResolution() {
-			return res;
-	}
-	
-	@Override
-	public double jakBliskoCollide(Sprite other) {
-		if ( other == null ) return Double.POSITIVE_INFINITY;
-		if ( other.node == null ) return Double.POSITIVE_INFINITY;
-		
-		double otherX = other.getMiddle().getX();
-		double otherY = other.getMiddle().getY();
-		double oX = otherX;
-		double oY = otherY;
-		double mX = res.getX() - otherX;
-		double mY = res.getY() - otherY;
-		
-		if ( oX < 0 && oY < 0 && mX > 0 && mY > 0 ) return -Math.sqrt(oX*oX+oY*oY);
-		if ( oX < 0 && oY > 0 && mX > 0 && mY < 0 ) return -Math.sqrt(oX*oX+mY*mY);
-		if ( oX > 0 && oY > 0 && mX < 0 && mY < 0 ) return -Math.sqrt(mX*mX+mY*mY);
-		if ( oX > 0 && oY < 0 && mX < 0 && mY > 0 ) return -Math.sqrt(mX*mX+oY*oY);
-		return Math.min(Math.min(oX, oY),Math.min(mX, mY));
-	}
+
+    private static Point2D res = new Point2D(0, 0);
+
+    public static void setResolution(Point2D res) {
+        if (res != null) {
+            WindowBound.res = res;
+        }
+    }
+
+    public static Point2D getResolution() {
+        return res;
+    }
+
+    @Override
+    public double jakBliskoCollide(Sprite other) {
+        if (other == null) {
+            return Double.POSITIVE_INFINITY;
+        }
+        if (other.node == null) {
+            return Double.POSITIVE_INFINITY;
+        }
+
+        double otherX = other.getMiddle().getX();
+        double otherY = other.getMiddle().getY();
+        double oX = otherX;
+        double oY = otherY;
+        double mX = res.getX() - otherX;
+        double mY = res.getY() - otherY;
+
+        if (oX < 0 && oY < 0 && mX > 0 && mY > 0) {
+            return -Math.sqrt(oX * oX + oY * oY);
+        }
+        if (oX < 0 && oY > 0 && mX > 0 && mY < 0) {
+            return -Math.sqrt(oX * oX + mY * mY);
+        }
+        if (oX > 0 && oY > 0 && mX < 0 && mY < 0) {
+            return -Math.sqrt(mX * mX + mY * mY);
+        }
+        if (oX > 0 && oY < 0 && mX < 0 && mY > 0) {
+            return -Math.sqrt(mX * mX + oY * oY);
+        }
+        return Math.min(Math.min(oX, oY), Math.min(mX, mY));
+    }
 }

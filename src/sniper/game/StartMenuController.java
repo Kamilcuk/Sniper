@@ -20,7 +20,6 @@ package sniper.game;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import static javafx.application.Platform.exit;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,7 +27,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import static sniper.game.GameWorld.getGameLoop;
 
 /**
  * FXML Controller class
@@ -41,60 +39,63 @@ public class StartMenuController extends FXMLMenu implements Initializable {
      * Initializes the controller class.
      */
     @FXML
-	private AnchorPane StartMenu;
+    private AnchorPane StartMenu;
     @FXML
-	private Button buttonstart;
-     @FXML
-	private Button buttonzamknij;
+    private Button buttonstart;
     @FXML
-	private Label labelpoziom;
+    private Button buttonzamknij;
     @FXML
-	private ChoiceBox poziom;
-    
-    
-     public static boolean boolStartMenu;
-    
+    private Label labelpoziom;
+    @FXML
+    private ChoiceBox poziom;
+
+    public static boolean boolStartMenu = false;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        nodeName = StartMenu.getId();
         GameWorld.getGameLoop().pause();
-        boolStartMenu=true;
+        boolStartMenu = true;
         poziom.getItems().addAll("Łatwy", "Średni", "Trudny");
         poziom.setValue("Łatwy");
-            }    
+    }
+
     @FXML
-    	private void buttonstart(ActionEvent event) {
-		GameWorld.getGameLoop().play();
-                exit();
-                boolStartMenu=false;
-                getChoice(poziom);
-                String pozT = (String) poziom.getValue();
-                switch(pozT){
-                    case "Łatwy":
-                        Zombie.setPoziomTrudnosci(1);
-                        break;
-                    case "Średni":
-                        Zombie.setPoziomTrudnosci(1.5);
-                        break;
-                    case "Trudny":
-                        Zombie.setPoziomTrudnosci(3);
-                        break;
-                }
-	}
+    private void buttonstart(ActionEvent event) {
+        GameWorld.getGameLoop().play();
+        exit(StartMenu);
+        boolStartMenu = false;
+        getChoice(poziom);
+        String pozT = (String) poziom.getValue();
+        switch (pozT) {
+            case "Łatwy":
+                Zombie.setPoziomTrudnosci(1);
+                break;
+            case "Średni":
+                Zombie.setPoziomTrudnosci(1.5);
+                break;
+            case "Trudny":
+                Zombie.setPoziomTrudnosci(3);
+                break;
+        }
+        getGameWorld().gameRestart();
+    }
+
     @FXML
-    	private void buttonzamknij(ActionEvent event) {
-            
-		Platform.exit();
-	}
-        	public Button getbuttonzamknij() {
-		return buttonzamknij;
-	}
-                public Button getbuttonstart() {
-		return buttonstart;
-	}
-        public void getChoice(ChoiceBox<String> poziom){
-            String poz = poziom.getValue();
-                    }
-        
+    private void buttonzamknij(ActionEvent event) {
+        Platform.exit();
+    }
+
+    public Button getbuttonzamknij() {
+        return buttonzamknij;
+    }
+
+    public Button getbuttonstart() {
+        return buttonstart;
+    }
+
+    public void getChoice(ChoiceBox<String> poziom) {
+        String poz = poziom.getValue();
+    }
+
 }

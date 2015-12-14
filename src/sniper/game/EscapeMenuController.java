@@ -23,8 +23,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -36,59 +34,63 @@ import javafx.scene.layout.AnchorPane;
  */
 public class EscapeMenuController extends FXMLMenu implements Initializable {
 
-	@FXML
-	private AnchorPane EscapeMenu;
-	@FXML
-	private Label statystyki;
-	@FXML
-	private Label labelPause;
-	@FXML
-	private Button buttonResume;
     @FXML
-        private Button buttonpowrot;
-	
-	/**
-	 * Initializes the controller class.
-	 */
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-		// TODO
-		nodeName = EscapeMenu.getId();
-		// umiesc się na środku ekranu
-		double X = EscapeMenu.getBoundsInLocal().getHeight();
-		double Y = 275; //EscapeMenu.getBoundsInLocal().getWidth(); Czemu nie działa?
-		EscapeMenu.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-X/2);
-		EscapeMenu.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-Y/2);
-		// pausuj gameWorld
-		GameWorld.getGameLoop().pause();
-		statystyki.setText(StatystykaGry.getText());
-	}	
-
-	@FXML
-	private void buttonExit(ActionEvent event) {
-		Platform.exit();
-	}
-        
-	@FXML
-	private void buttonResume(ActionEvent event) {
-		GameWorld.getGameLoop().play();
-		exit();
-	}
+    private AnchorPane EscapeMenu;
     @FXML
-	private void buttonpowrot(ActionEvent event) {
-                Platform.exit();
-                              
-	}
-	
-	public Label getLabelPause() {
-		return labelPause;
-	}
+    private Label statystyki;
+    @FXML
+    private Label labelPause;
+    @FXML
+    private Button buttonResume;
+    @FXML
+    private Button buttonpowrot;
 
-	public Button getButtonResume() {
-		return buttonResume;
-	}
-        public Button getButtonpowrot() {
-		return buttonpowrot;
-	}
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // umiesc się na środku ekranu
+        double X = EscapeMenu.getBoundsInLocal().getHeight();
+        double Y = 275; //EscapeMenu.getBoundsInLocal().getWidth(); Czemu nie działa?
+        EscapeMenu.setTranslateX(WindowBound.getResolution().multiply(0.5).getX() - X / 2);
+        EscapeMenu.setTranslateY(WindowBound.getResolution().multiply(0.5).getY() - Y / 2);
+        // pausuj gameWorld
+        GameWorld.getGameLoop().pause();
+        statystyki.setText(StatystykaGry.getText());
+    }
+
+    @FXML
+    private void buttonExit(ActionEvent event) {
+        Platform.exit();
+    }
+
+    @FXML
+    private void buttonResume(ActionEvent event) {
+        GameWorld.getGameLoop().play();
+        exit(EscapeMenu);
+    }
+
+    @FXML
+    private void buttonpowrot(ActionEvent event) {
+        // my sie usuwamy
+        exit(EscapeMenu);
+        // i odpalamy StartMenu
+        GameWorld.getGameLoop().pause();
+        SpriteManager.removeAllSprites();
+        ((SniperWorld1)getGameWorld()).odpalMenu("StartMenu.fxml"); /// co to jest, co to sie dzieje
+    }
+
+    public Label getLabelPause() {
+        return labelPause;
+    }
+
+    public Button getButtonResume() {
+        return buttonResume;
+    }
+
+    public Button getButtonpowrot() {
+        return buttonpowrot;
+    }
 
 }

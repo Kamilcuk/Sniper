@@ -17,8 +17,6 @@
  */
 package sniper.game;
 
-
-
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -27,32 +25,33 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-
 /**
  *
  * @author Kamil Cukrowski
  */
 public class ZombieKilledIndicator extends Sprite {
-	private final String APPEND = "Dead zombies: ";
-	private final Label text = new Label();
-       
-	
-	public ZombieKilledIndicator() {
-		text.setTranslateX(250);
-		text.setTranslateY(15);
-                text.setFont(Font.font(null,FontWeight.BOLD, 32));
-                text.setTextFill(Color.web("#800000"));
 
-		node = text;
-	}
-	
-	@Override
-	public void update() {
-		Player pl = SniperWorld1.getPlayer();
-		ImageView bg = (ImageView) SpriteManager.getGroup().lookup("#tlo");
-                //System.out.println(bg);
-		String levelup = "";
-		if ( pl.canLevelUp() ) levelup = " NEW level! ";
-		text.setText(APPEND + ZombieManager.getDeadZombies() + " Player level: " + pl.getPlayerLevel() + levelup );
-	}
+    private final String APPEND = "Dead zombies: ";
+    private final Label text = new Label();
+
+    public ZombieKilledIndicator() {
+        text.setTranslateX(250);
+        text.setTranslateY(15);
+        text.setFont(Font.font(null, FontWeight.BOLD, 32));
+        text.setTextFill(Color.web("#800000"));
+
+        node = text;
+    }
+
+    @Override
+    public void update() {
+        Player pl = SniperWorld1.getPlayer();
+        ImageView bg = (ImageView) SpriteManager.getGroup().lookup("#tlo");
+        //System.out.println(bg);
+        String levelup = "";
+        if (pl.canLevelUp()) {
+            levelup = " NEW level! ";
+        }
+        text.setText(APPEND + ZombieManager.getDeadZombies() + " Player level: " + pl.getPlayerLevel() + levelup);
+    }
 }

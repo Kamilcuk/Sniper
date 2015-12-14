@@ -25,23 +25,23 @@ import javafx.scene.paint.Color;
  * @author Kamil Cukrowski
  */
 public class PlayerHpBar extends Sprite {
-        
-	private final Player player;
-	private final ProgressBar progressBar = new ProgressBar();
-	public PlayerHpBar(Player player) {
-		this.player = player;
-		progressBar.setTranslateX(13);
-                progressBar.setStyle("-fx-accent: red"); //czerwony pasek
-                progressBar.setMinWidth(300);
-		progressBar.setTranslateX(3);
-		progressBar.setTranslateY(3);
-              node = progressBar;
-	}
 
-	@Override
-	public void update() {
-		progressBar.setProgress(player.getPlayerHpPercentage());
-	}
-	
-	
+    private final Player player;
+    private final ProgressBar progressBar = new ProgressBar();
+
+    public PlayerHpBar(Player player) {
+        this.player = player;
+        progressBar.setTranslateX(13);
+        progressBar.setStyle("-fx-accent: red"); //czerwony pasek
+        progressBar.setMinWidth(300);
+        progressBar.setTranslateX(3);
+        progressBar.setTranslateY(3);
+        node = progressBar;
+    }
+
+    @Override
+    public void update() {
+        progressBar.setProgress(player.getPlayerHpPercentage());
+    }
+
 }

@@ -27,38 +27,40 @@ import javafx.scene.shape.Line;
  * @author Kamil Cukrowski
  */
 public class PociskSniper extends Pocisk {
-	private TimeMeasurer timeMeasurer = new TimeMeasurer((long)bulletSpeed);
-	private boolean zaatakował = false;
-	
-	public PociskSniper(double bulletSpeed, double bulletAttack, String bulletType, Point2D orig, double angle) {
-		super(bulletSpeed, bulletAttack, bulletType, orig, angle);
-		
-		double endX = orig.getX() + 1000 * Math.sin(angle*Math.PI/180);
-		double endY = orig.getY() - 1000 * Math.cos(angle*Math.PI/180);
-		
-		Line line = new Line();
-		line.setStartX(orig.getX());
-		line.setStartY(orig.getY());
-		line.setEndX(endX);
-		line.setEndY(endY);
-		node = line;
-		collisionBounds = line;
-	}
-	
-	@Override
-	public void update() {
-		// bulletSpeed to czas jak długo jesteśmy widoczni na ekranie! :D
-		if ( timeMeasurer.runAfterTimeHasPassed((long)bulletSpeed) ) {
-			SpriteManager.removeSprite(this);
-		}
-		zaatakował = true;
-	}
-	
-	@Override
-	public double getBulletAttack() {
-		if ( zaatakował )
-			return 0;
-		return bulletAttack;
-	}
-	
+
+    private TimeMeasurer timeMeasurer = new TimeMeasurer((long)bulletSpeed);
+    private boolean zaatakował = false;
+
+    public PociskSniper(double bulletSpeed, double bulletAttack, String bulletType, Point2D orig, double angle) {
+        super(bulletSpeed, bulletAttack, bulletType, orig, angle);
+
+        double endX = orig.getX() + 1000 * Math.sin(angle * Math.PI / 180);
+        double endY = orig.getY() - 1000 * Math.cos(angle * Math.PI / 180);
+
+        Line line = new Line();
+        line.setStartX(orig.getX());
+        line.setStartY(orig.getY());
+        line.setEndX(endX);
+        line.setEndY(endY);
+        node = line;
+        collisionBounds = line;
+    }
+
+    @Override
+    public void update() {
+        // bulletSpeed to czas jak długo jesteśmy widoczni na ekranie! :D
+        if (timeMeasurer.runAfterTimeHasPassed((long)bulletSpeed)) {
+            SpriteManager.removeSprite(this);
+        }
+        zaatakował = true;
+    }
+
+    @Override
+    public double getBulletAttack() {
+        if (zaatakował) {
+            return 0;
+        }
+        return bulletAttack;
+    }
+
 }

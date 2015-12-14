@@ -26,35 +26,37 @@ import javafx.scene.shape.Circle;
  * @author Kamil Cukrowski
  */
 public class PociskAK47 extends Pocisk {
-	
-	public PociskAK47(double bulletSpeed, double bulletAttack, String bulletType, Point2D orig, double angle) {
-		super(bulletSpeed, bulletAttack, bulletType, orig, angle);
-		
-		Circle circle = new Circle(2, Color.web("black", 1));
-		circle.setStrokeWidth(4);
-		circle.setTranslateX(orig.getX());
-		circle.setTranslateY(orig.getY());
-		collisionBounds = circle;
-		node = circle;
-		
-		vX = bulletSpeed*Math.sin(angle*Math.PI/180);
-		vY = -bulletSpeed*Math.cos(angle*Math.PI/180);
-	}
-	
-	@Override
-	public void update() {
-		node.setTranslateX(node.getTranslateX()+vX);
-		node.setTranslateY(node.getTranslateY()+vY);
-	}
 
-	@Override
-	protected void collide(Sprite other, double distance) {
-		if ( distance >= 0 ) return;
-		if ( other instanceof Zombie ) {
-			SpriteManager.removeSprite(this);
-		}
-		if ( other instanceof WindowBound ) {
-			SpriteManager.removeSprite(this);
-		}
-	}
+    public PociskAK47(double bulletSpeed, double bulletAttack, String bulletType, Point2D orig, double angle) {
+        super(bulletSpeed, bulletAttack, bulletType, orig, angle);
+
+        Circle circle = new Circle(2, Color.web("black", 1));
+        circle.setStrokeWidth(4);
+        circle.setTranslateX(orig.getX());
+        circle.setTranslateY(orig.getY());
+        collisionBounds = circle;
+        node = circle;
+
+        vX = bulletSpeed * Math.sin(angle * Math.PI / 180);
+        vY = -bulletSpeed * Math.cos(angle * Math.PI / 180);
+    }
+
+    @Override
+    public void update() {
+        node.setTranslateX(node.getTranslateX() + vX);
+        node.setTranslateY(node.getTranslateY() + vY);
+    }
+
+    @Override
+    protected void collide(Sprite other, double distance) {
+        if (distance >= 0) {
+            return;
+        }
+        if (other instanceof Zombie) {
+            SpriteManager.removeSprite(this);
+        }
+        if (other instanceof WindowBound) {
+            SpriteManager.removeSprite(this);
+        }
+    }
 }

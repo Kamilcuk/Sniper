@@ -21,27 +21,29 @@ import sniper.Sniper;
 
 /**
  * Klasa słóżąca wyświetlaniu statystyki gry
+ *
  * @author Kamil Cukrowski
  */
 public class StatystykaGry {
-	private static GameWorld gameWorld;
 
-	public static GameWorld getGameWorld() {
-		return gameWorld;
-	}
+    private static GameWorld gameWorld;
 
-	public static void setGameWorld(GameWorld gameWorld) {
-		StatystykaGry.gameWorld = gameWorld;
-	}
-	
-	public static String getText() {
-             long stop = System.currentTimeMillis();
-             Player pl = SniperWorld1.getPlayer();
-		return "   Statystyka gry:\n" + "Osiągnięty level:  " + pl.getPlayerLevel() + "\n"
-                        + "Zabite zombie:  "                         
-                        + ZombieManager.getDeadZombies() + "\n"+ "Przebyta droga:  " 
-                        + Player.getDrogaPrzebyta() + "\n" + "Czas gry:  " 
-                        + (((stop-Sniper.start)/1000)/60) + " minut " + (((stop-Sniper.start)/1000)%60) + " sekund"+ "\n"
-                        + "Wystrzelone pociski:  " + Bron.getWystrzelonePociski();
-	}
+    public static GameWorld getGameWorld() {
+        return gameWorld;
+    }
+
+    public static void setGameWorld(GameWorld gameWorld) {
+        StatystykaGry.gameWorld = gameWorld;
+    }
+
+    public static String getText() {
+        long stop = System.currentTimeMillis();
+        Player pl = SniperWorld1.getPlayer();
+        return "   Statystyka gry:\n" + "Osiągnięty level:  " + pl.getPlayerLevel() + "\n"
+                + "Zabite zombie:  "
+                + ZombieManager.getDeadZombies() + "\n" + "Przebyta droga:  "
+                + Player.getDrogaPrzebyta() + "\n" + "Czas gry:  "
+                + (((stop - Sniper.start) / 1000) / 60) + " minut " + (((stop - Sniper.start) / 1000) % 60) + " sekund" + "\n"
+                + "Wystrzelone pociski:  " + Bron.getWystrzelonePociski();
+    }
 }

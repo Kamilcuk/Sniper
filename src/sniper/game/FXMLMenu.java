@@ -19,21 +19,39 @@ package sniper.game;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
 
 /**
  *
  * @author Kamil Cukrowski
  */
 public abstract class FXMLMenu {
-	protected String nodeName;
-	
-	public void exit() {
-		if ( nodeName.length() == 0 ) return;
-		Node node = SpriteManager.getGroup().lookup("#" + nodeName);
-		if ( node == null ) return;
-		node.setVisible(false);
-		Group group = (Group) node.getParent();
-		if ( group == null ) return;
+
+    static GameWorld gameWorld;
+
+    public GameWorld getGameWorld() {
+        return gameWorld;
+    }
+
+    public void setGameWorld(GameWorld gameWorld) {
+        this.gameWorld = gameWorld;
+    }
+    
+    public void exit(AnchorPane anchorPane) {
+        String nodeName;
+        nodeName = anchorPane.getId();
+        if (nodeName.length() == 0) {
+            return;
+        }
+        Node node = SpriteManager.getGroup().lookup("#" + nodeName);
+        if (node == null) {
+            return;
+        }
+        node.setVisible(false);
+        Group group = (Group) node.getParent();
+        if (group == null) {
+            return;
+        }
         group.getChildren().remove(node);
-	}
+    }
 }

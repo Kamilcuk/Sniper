@@ -24,25 +24,28 @@ import javafx.geometry.Point2D;
  * @author Kamil Cukrowski
  */
 public abstract class Pocisk extends Sprite {
-	/** config */
-	protected final String bulletType;
-	protected final double bulletSpeed;
-	protected final double bulletAttack;
-	
-	public Pocisk(
-			double bulletSpeed,
-			double bulletAttack,
-			String bulletType,
-			final Point2D orig,
-			final double angle) {
-		this.bulletType = bulletType;
-		this.bulletAttack = bulletAttack;
-		this.bulletSpeed = bulletSpeed;
-		
-		SoundManager.playSound("shot");
-	}
-	
-	public double getBulletAttack() {
-		return bulletAttack;
-	}
+
+    /**
+     * config
+     */
+    protected final String bulletType;
+    protected final double bulletSpeed;
+    protected final double bulletAttack;
+
+    public Pocisk(
+            double bulletSpeed,
+            double bulletAttack,
+            String bulletType,
+            final Point2D orig,
+            final double angle) {
+        this.bulletType = bulletType;
+        this.bulletAttack = bulletAttack;
+        this.bulletSpeed = bulletSpeed;
+
+        SoundManager.playSound("shot");
+    }
+
+    public double getBulletAttack() {
+        return bulletAttack;
+    }
 }

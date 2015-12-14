@@ -19,34 +19,36 @@ package sniper.game;
 
 /**
  * Klasa służy wykonywaniu pewnej określonej akcji co określony czas.
+ *
  * @author Kamil Cukrowski
  */
 public class TimeMeasurer {
-	private long nextTime = 0;
-	
-	public TimeMeasurer(long timeToPass) {
-		nextTime = System.nanoTime()/1000000 + timeToPass;
-	}
-	
-	public TimeMeasurer() {
-		
-	}
-	
-	/**
-	 * Funkcja sprawdza czy minął od ostatniego uruchomienia tej funkcji czas
-	 * podany w parametrze. Jeśli upłynął, zaczyna liczyć czas od momentu jej 
-	 * odpalenia oraz zwraca prawdę. Jeśli ten czas nie upłynął, zwraca fałsz.
-	 * @param timeToPass
-	 * @return 
-	 */
-	public boolean runAfterTimeHasPassed(long timeToPass) {
-		long currTime = System.nanoTime()/1000000;
-		if ( currTime >= nextTime ) {
-			nextTime = currTime +  timeToPass;
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
+
+    private long nextTime = 0;
+
+    public TimeMeasurer(long timeToPass) {
+        nextTime = System.nanoTime() / 1000000 + timeToPass;
+    }
+
+    public TimeMeasurer() {
+
+    }
+
+    /**
+     * Funkcja sprawdza czy minął od ostatniego uruchomienia tej funkcji czas
+     * podany w parametrze. Jeśli upłynął, zaczyna liczyć czas od momentu jej
+     * odpalenia oraz zwraca prawdę. Jeśli ten czas nie upłynął, zwraca fałsz.
+     *
+     * @param timeToPass
+     * @return
+     */
+    public boolean runAfterTimeHasPassed(long timeToPass) {
+        long currTime = System.nanoTime() / 1000000;
+        if (currTime >= nextTime) {
+            nextTime = currTime + (long)timeToPass;
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

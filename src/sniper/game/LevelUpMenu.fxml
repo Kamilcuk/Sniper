@@ -8,16 +8,16 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane id="LevelUpMenu" fx:id="LevelUpMenu" prefHeight="153.0" prefWidth="208.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sniper.game.LevelUpMenuController">
-   <children>
-      <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="14.0" prefWidth="175.0" text="Level Up Menu" textAlignment="CENTER" />
-      <Button layoutX="14.0" layoutY="28.0" mnemonicParsing="false" onAction="#buttonHpOnAction" prefHeight="22.0" prefWidth="175.0" text="Hp" />
-      <Button layoutX="14.0" layoutY="50.0" mnemonicParsing="false" onAction="#buttonHpRegenOnAction" prefHeight="22.0" prefWidth="175.0" text="Hp Regen" />
-      <Button layoutX="14.0" layoutY="72.0" mnemonicParsing="false" onAction="#buttonAttackOnAction" prefHeight="22.0" prefWidth="175.0" text="Attack" />
-      <Button layoutX="14.0" layoutY="94.0" mnemonicParsing="false" onAction="#buttonAttackSpeedOnAction" prefHeight="22.0" prefWidth="175.0" text="Attack Speed" />
-      <Button layoutX="14.0" layoutY="116.0" mnemonicParsing="false" onAction="#buttonWalkSpeedOnAction" prefHeight="22.0" prefWidth="175.0" text="Walk Speed" />
-      <HBox prefHeight="0.0" prefWidth="129.0" />
-   </children>
-   <effect>
-      <InnerShadow />
-   </effect>
+    <children>
+        <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="14.0" prefWidth="175.0" text="Level Up Menu" textAlignment="CENTER" />
+        <Button layoutX="14.0" layoutY="28.0" mnemonicParsing="false" onAction="#buttonHpOnAction" prefHeight="22.0" prefWidth="175.0" text="Hp" />
+        <Button layoutX="14.0" layoutY="50.0" mnemonicParsing="false" onAction="#buttonHpRegenOnAction" prefHeight="22.0" prefWidth="175.0" text="Hp Regen" />
+        <Button layoutX="14.0" layoutY="72.0" mnemonicParsing="false" onAction="#buttonAttackOnAction" prefHeight="22.0" prefWidth="175.0" text="Attack" />
+        <Button layoutX="14.0" layoutY="94.0" mnemonicParsing="false" onAction="#buttonAttackSpeedOnAction" prefHeight="22.0" prefWidth="175.0" text="Attack Speed" />
+        <Button layoutX="14.0" layoutY="116.0" mnemonicParsing="false" onAction="#buttonWalkSpeedOnAction" prefHeight="22.0" prefWidth="175.0" text="Walk Speed" />
+        <HBox prefHeight="0.0" prefWidth="129.0" />
+    </children>
+    <effect>
+        <InnerShadow />
+    </effect>
 </AnchorPane>

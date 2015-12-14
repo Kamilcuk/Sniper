@@ -32,59 +32,57 @@ import javafx.scene.layout.AnchorPane;
  * @author Kamil Cukrowski
  */
 public class LevelUpMenuController extends FXMLMenu implements Initializable {
-	
-	@FXML
-	private AnchorPane LevelUpMenu;
-	
-	/**
-	 * Initializes the controller class.
-	 */
-	@Override
-	public void initialize(URL url, ResourceBundle rb) {
-		// TODO
-		nodeName = LevelUpMenu.getId();
-		
-		double X = LevelUpMenu.getBoundsInLocal().getHeight();
-		double Y = 208; //LevelUpMenu.getBoundsInLocal().getWidth(); // Czemu nie działa?
-		LevelUpMenu.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-X/2);
-		LevelUpMenu.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-Y/2);
-		
-		GameWorld.getGameLoop().pause();
-	}
-	
-	@FXML
-	private void buttonHpOnAction(ActionEvent event) {
-		GameWorld.getPlayer().levelUp("playerHp");
-		GameWorld.getGameLoop().play();
-		exit();
-	}
 
-	@FXML
-	private void buttonHpRegenOnAction(ActionEvent event) {
-		GameWorld.getPlayer().levelUp("playerHpRegen");
-		GameWorld.getGameLoop().play();
-		exit();
-	}
+    @FXML
+    private AnchorPane LevelUpMenu;
 
-	@FXML
-	private void buttonAttackOnAction(ActionEvent event) {
-		GameWorld.getPlayer().levelUp("playerAttack");
-		GameWorld.getGameLoop().play();
-		exit();
-	}
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+        double X = LevelUpMenu.getBoundsInLocal().getHeight();
+        double Y = 208; //LevelUpMenu.getBoundsInLocal().getWidth(); // Czemu nie działa?
+        LevelUpMenu.setTranslateX(WindowBound.getResolution().multiply(0.5).getX() - X / 2);
+        LevelUpMenu.setTranslateY(WindowBound.getResolution().multiply(0.5).getY() - Y / 2);
 
-	@FXML
-	private void buttonAttackSpeedOnAction(ActionEvent event) {
-		GameWorld.getPlayer().levelUp("playerAttackSpeed");
-		GameWorld.getGameLoop().play();
-		exit();
-	}
+        GameWorld.getGameLoop().pause();
+    }
 
-	@FXML
-	private void buttonWalkSpeedOnAction(ActionEvent event) {
-		GameWorld.getPlayer().levelUp("playerWalkSpeed");
-		GameWorld.getGameLoop().play();
-		exit();
-	}
-	
+    @FXML
+    private void buttonHpOnAction(ActionEvent event) {
+        GameWorld.getPlayer().levelUp("playerHp");
+        GameWorld.getGameLoop().play();
+        exit(LevelUpMenu);
+    }
+
+    @FXML
+    private void buttonHpRegenOnAction(ActionEvent event) {
+        GameWorld.getPlayer().levelUp("playerHpRegen");
+        GameWorld.getGameLoop().play();
+        exit(LevelUpMenu);
+    }
+
+    @FXML
+    private void buttonAttackOnAction(ActionEvent event) {
+        GameWorld.getPlayer().levelUp("playerAttack");
+        GameWorld.getGameLoop().play();
+        exit(LevelUpMenu);
+    }
+
+    @FXML
+    private void buttonAttackSpeedOnAction(ActionEvent event) {
+        GameWorld.getPlayer().levelUp("playerAttackSpeed");
+        GameWorld.getGameLoop().play();
+        exit(LevelUpMenu);
+    }
+
+    @FXML
+    private void buttonWalkSpeedOnAction(ActionEvent event) {
+        GameWorld.getPlayer().levelUp("playerWalkSpeed");
+        GameWorld.getGameLoop().play();
+        exit(LevelUpMenu);
+    }
+
 }
