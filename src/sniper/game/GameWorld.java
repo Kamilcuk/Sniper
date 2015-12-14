@@ -99,7 +99,7 @@ public abstract class GameWorld {
 	 * Włącza gameloop;
      */
     public void beginGameLoop() {
-        getGameLoop().play();
+        //getGameLoop().play();// odpala go StartMenu wiec pizda Nad głową
     }
  
     /**

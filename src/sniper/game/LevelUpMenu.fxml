@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="LevelUpMenu" fx:id="LevelUpMenu" prefHeight="153.0" prefWidth="208.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sniper.game.LevelUpMenuController">
+<AnchorPane id="LevelUpMenu" fx:id="LevelUpMenu" prefHeight="153.0" prefWidth="208.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sniper.game.LevelUpMenuController">
    <children>
       <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="14.0" prefWidth="175.0" text="Level Up Menu" textAlignment="CENTER" />
       <Button layoutX="14.0" layoutY="28.0" mnemonicParsing="false" onAction="#buttonHpOnAction" prefHeight="22.0" prefWidth="175.0" text="Hp" />
@@ -16,4 +17,7 @@
       <Button layoutX="14.0" layoutY="116.0" mnemonicParsing="false" onAction="#buttonWalkSpeedOnAction" prefHeight="22.0" prefWidth="175.0" text="Walk Speed" />
       <HBox prefHeight="0.0" prefWidth="129.0" />
    </children>
+   <effect>
+      <InnerShadow />
+   </effect>
 </AnchorPane>

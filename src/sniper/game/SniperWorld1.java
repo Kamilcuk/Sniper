@@ -29,6 +29,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
@@ -37,6 +38,8 @@ import javafx.stage.Stage;
  */
 public class SniperWorld1 extends GameWorld {
 
+    
+    Node StartMenuNode = SpriteManager.getGroup().lookup("#StartMenu");
 	@Override
 	public void initialize(final Stage stage) {
 		 // Sets the window title
@@ -54,6 +57,7 @@ public class SniperWorld1 extends GameWorld {
          bg.setFitHeight(WindowBound.getResolution().getY());
          bg.setSmooth(true);
          bg.setCache(true);
+         bg.setId("tlo");
 
 		getGroup().getChildren().add(0, bg);
 		
@@ -69,36 +73,47 @@ public class SniperWorld1 extends GameWorld {
 		
 		PlayerHpBar playerHpBar = new PlayerHpBar(player);
 		addSprite(playerHpBar);
+                odpalStartMenu();
+               
+                    
+                
 	}
 	
 	@Override
 	protected void handleOnKeyPressed(KeyEvent e) {
+		Node levelUpNode = SpriteManager.getGroup().lookup("#LevelUpMenu");
+                Node escapeNode = SpriteManager.getGroup().lookup("#EscapeMenu");
 		if ( e.getCode() == KeyCode.F ) {
-			Node node = SpriteManager.getGroup().lookup("#LevelUpMenu");
-			if ( node != null ) { // okno juz jest otwarte, trzeba je zamknąć
-				SpriteManager.removeNodeFromScene(node);
+                        if ( escapeNode != null ) { 
+                            return;
+                        }
+			if ( levelUpNode != null ) { // okno juz jest otwarte, trzeba je zamknąć
+				SpriteManager.removeNodeFromScene(levelUpNode);
 				getGameLoop().play();
 			} else { //otwieramy nowe okno
 				if ( !getPlayer().canLevelUp() ) return; //jesli gracz nie moze levelowac
 				try {
-					node = FXMLLoader.load(getClass().getResource("LevelUpMenu.fxml"));
-					node.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-50);
-						node.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-60);
-					SpriteManager.addNodeToScene(node);
+					levelUpNode = FXMLLoader.load(getClass().getResource("LevelUpMenu.fxml"));
+					levelUpNode.setTranslateX(WindowBound.getResolution().multiply(0.5).getX()-50);
+						levelUpNode.setTranslateY(WindowBound.getResolution().multiply(0.5).getY()-60);
+					SpriteManager.addNodeToScene(levelUpNode);
 				} catch (IOException ex) {
 					Logger.getLogger(SniperWorld1.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
 		}
 		if ( e.getCode() == KeyCode.ESCAPE ) {
-			Node node = SpriteManager.getGroup().lookup("#EscapeMenu");
-			if ( node != null ) { // okno juz jest otwarte, trzeba je zamknąć
-				SpriteManager.removeNodeFromScene(node);
+                   
+                        if ( levelUpNode != null || StartMenuController.boolStartMenu != false) { //nie wlaczy sie jak startmenu wlaczone
+                            return;
+                        }
+			if ( escapeNode != null ) { // okno juz jest otwarte, trzeba je zamknąć
+				SpriteManager.removeNodeFromScene(escapeNode);
 				getGameLoop().play();
 			} else { //otwieramy nowe okno
 				try {
-					node = FXMLLoader.load(getClass().getResource("EscapeMenu.fxml"));
-					SpriteManager.addNodeToScene(node);
+					escapeNode = FXMLLoader.load(getClass().getResource("EscapeMenu.fxml"));
+					SpriteManager.addNodeToScene(escapeNode);
 				} catch (IOException ex) {
 					Logger.getLogger(SniperWorld1.class.getName()).log(Level.SEVERE, null, ex);
 				}
@@ -106,6 +121,20 @@ public class SniperWorld1 extends GameWorld {
 		}
 	}
 	
+        //odpalanie menu na starcie
+        public void odpalStartMenu() {
+                                      
+                     
+                    
+                       try {
+					StartMenuNode = FXMLLoader.load(getClass().getResource("StartMenu.fxml"));
+					SpriteManager.addNodeToScene(StartMenuNode);
+				} catch (IOException ex) {
+					Logger.getLogger(SniperWorld1.class.getName()).log(Level.SEVERE, null, ex);
+				}
+                        
+}           
+        
 	@Override
 	protected void handleOnKeReleased(KeyEvent e) {
 	}

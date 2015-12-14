@@ -18,10 +18,12 @@
 package sniper;
 
 import sniper.game.Game;
+import sniper.game.StartMenuController;
 
 public class Sniper {
     public static final long start = System.currentTimeMillis();
    public static void main(String args[]) { 
       new Game().run();
- }
+     }
+   
 }

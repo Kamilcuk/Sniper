@@ -33,18 +33,22 @@ public class Zombie extends Sprite {
 	
 	/** ataki się dzieją co określony czas */
 	private long nextTime = 0;  // w ms
-	
 	/** config */
 	private final int type;
 	private int imageSize = 75;
-	private double movingSpeed = 1;
-	private int hp = 100;
-	private int zombieAttack = 20;
-	private int zombieAttackSpeed = 2000; //ms
+	private double movingSpeed = 1*poziomTrudnosci;
+	private double hp = 100*poziomTrudnosci;
+	private double zombieAttack = 20*poziomTrudnosci;
+	private double zombieAttackSpeed = 2000/poziomTrudnosci; //ms
+        static double poziomTrudnosci;
+        
 	
 	public Zombie(
 			final Point2D orig,
 			final int type) {
+            ////////////////////////
+           // System.out.println(poziomTrudnosci);
+            
 		this.type = type;
 		setType(type);
 		
@@ -77,7 +81,7 @@ public class Zombie extends Sprite {
 	 * @param type 
 	 */
 	private void setType(final int type) {
-		Image image;
+                Image image;
 		switch(type) {
 		default:
 		case 0:
@@ -89,27 +93,27 @@ public class Zombie extends Sprite {
 		}
 		switch(type) {
 		case 0: // normal
-			imageSize = 40;			movingSpeed = 0.4;
-			hp = 100;				zombieAttack = 20;
-			zombieAttackSpeed = 2000; //ms
+			imageSize = 60;			movingSpeed = 0.4*poziomTrudnosci;
+			hp = 100*poziomTrudnosci;				zombieAttack = 20*poziomTrudnosci;
+			zombieAttackSpeed = 2000/poziomTrudnosci; //ms
 			break;
 		case 1: // slow, big attack
 			image = Helper.overrideImage(image, 1., 0., 1.);
-			imageSize = 40;			movingSpeed = 0.25;
-			hp = 50;				zombieAttack = 5;
-			zombieAttackSpeed = 1000; //ms
+			imageSize = 60;			movingSpeed = 0.25*poziomTrudnosci;
+			hp = 50*poziomTrudnosci;				zombieAttack = 5*poziomTrudnosci;
+			zombieAttackSpeed = 1000/poziomTrudnosci; //ms
 			break;
 		case 2: // fast, small attack
 			image = Helper.overrideImage(image, 0., 0., 1.);
-			imageSize = 40;			movingSpeed = 2;
-			hp = 100;				zombieAttack = 20;
-			zombieAttackSpeed = 2000; //ms
+			imageSize = 60;			movingSpeed = 2*poziomTrudnosci;
+			hp = 100*poziomTrudnosci;				zombieAttack = 20*poziomTrudnosci;
+			zombieAttackSpeed = 2000/poziomTrudnosci; //ms
 			break;
 		case 3: // big, life + big attack
 			image = Helper.overrideImage(image, 1., 0., 0.);
-			imageSize = 60;			movingSpeed = 0.9;
-			hp = 300;				zombieAttack = 30;
-			zombieAttackSpeed = 3000; //ms
+			imageSize = 80;			movingSpeed = 0.9*poziomTrudnosci;
+			hp = 300*poziomTrudnosci;				zombieAttack = 30*poziomTrudnosci;
+			zombieAttackSpeed = 3000/poziomTrudnosci; //ms
 			break;
 		}
 		obraz.setImage(image);
@@ -189,9 +193,13 @@ public class Zombie extends Sprite {
 	int getZombieAttack() {			
 		long currTime = System.nanoTime()/1000000;
 		if ( currTime >= nextTime ) {
-			nextTime = currTime + zombieAttackSpeed;
-			return(zombieAttack);
+			nextTime = currTime + (long)zombieAttackSpeed;
+			return((int)zombieAttack);
 		}
 		return 0;
 	}
+        
+        public static double setPoziomTrudnosci(double poz){
+        poziomTrudnosci = poz;
+                return poz;}
 }

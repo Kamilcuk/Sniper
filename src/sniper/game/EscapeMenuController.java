@@ -44,6 +44,8 @@ public class EscapeMenuController extends FXMLMenu implements Initializable {
 	private Label labelPause;
 	@FXML
 	private Button buttonResume;
+    @FXML
+        private Button buttonpowrot;
 	
 	/**
 	 * Initializes the controller class.
@@ -72,6 +74,11 @@ public class EscapeMenuController extends FXMLMenu implements Initializable {
 		GameWorld.getGameLoop().play();
 		exit();
 	}
+    @FXML
+	private void buttonpowrot(ActionEvent event) {
+                Platform.exit();
+                              
+	}
 	
 	public Label getLabelPause() {
 		return labelPause;
@@ -80,4 +87,8 @@ public class EscapeMenuController extends FXMLMenu implements Initializable {
 	public Button getButtonResume() {
 		return buttonResume;
 	}
+        public Button getButtonpowrot() {
+		return buttonpowrot;
+	}
+
 }
