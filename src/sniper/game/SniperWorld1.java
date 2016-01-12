@@ -34,7 +34,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
- *
+ *  Tworzy świat gry.
  * @author Kamil Cukrowski
  */
 public class SniperWorld1 extends GameWorld {

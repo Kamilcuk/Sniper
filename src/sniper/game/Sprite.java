@@ -63,7 +63,7 @@ public abstract class Sprite {
     }
 
     /**
-     * Funkcja służąca odświarzeniu obiektu.
+     * Funkcja służąca odświerzeniu obiektu.
      */
     public void update() {
 

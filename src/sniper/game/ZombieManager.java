@@ -20,7 +20,7 @@ package sniper.game;
 import javafx.geometry.Point2D;
 
 /**
- *
+ * Klasa służy rysowaniu, zarządzaniu zombiakami.
  * @author Kamil Cukrowski
  */
 public class ZombieManager extends Sprite {
@@ -60,7 +60,6 @@ public class ZombieManager extends Sprite {
      */
     public static void addDeadZombie(Zombie zombie) {
         deadZombies++;
-        System.out.println("zombie" + deadZombies);
         aliveZombies--;
         deadZombiesByType[zombie.getType()]++;
     }
@@ -108,7 +107,7 @@ public class ZombieManager extends Sprite {
                 maxZombies = maxMaxZombies;
             }
         }
-        if (aliveZombies < 1){ // maxZombies + Math.sqrt(deadZombies)) {
+        if (aliveZombies < maxZombies + Math.sqrt(deadZombies)) {
             spawnZombie();
         }
     }

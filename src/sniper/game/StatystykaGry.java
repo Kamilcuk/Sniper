@@ -39,7 +39,7 @@ public class StatystykaGry {
     public static String getText() {
         long stop = System.currentTimeMillis();
         Player pl = SniperWorld1.getPlayer();
-        return "   Statystyka gry:\n" + "Osiągnięty level:  " + pl.getPlayerLevel() + "\n"
+        return "   Statystyka gry:\n" + "Osiągnięty poziom:  " + pl.getPlayerLevel() + "\n"
                 + "Zabite zombie:  "
                 + ZombieManager.getDeadZombies() + "\n" + "Przebyta droga:  "
                 + Player.getDrogaPrzebyta() + "\n" + "Czas gry:  "

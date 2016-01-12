@@ -46,7 +46,7 @@ import javafx.scene.input.MouseEvent;
  * Skopiowane z https://github.com/carldea/JFXGen/
  */
 /**
- *
+ *  Klasa odpowiadająca za pętle gry.
  * @author Kamil Cukrowski
  */
 public abstract class GameWorld {
@@ -111,7 +111,7 @@ public abstract class GameWorld {
      * Włącza gameloop;
      */
     public void beginGameLoop() {
-        //getGameLoop().play();// odpala go StartMenu wiec pizda Nad głową
+        //getGameLoop().play();// odpala go StartMenu wiec  Nad głową
     }
 
     /**

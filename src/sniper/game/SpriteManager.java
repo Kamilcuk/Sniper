@@ -23,7 +23,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 
 /**
- *
+ *  Odpowiedzialny za zarządzanie spritami.
  * @author Kamil Cukrowski
  */
 public class SpriteManager {

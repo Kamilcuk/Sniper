@@ -26,18 +26,18 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- *
+ * Sprite wyświetlający tekst na górze okna.
  * @author Kamil Cukrowski
  */
 public class ZombieKilledIndicator extends Sprite {
 
-    private final String APPEND = "Dead zombies: ";
+    private final String APPEND = "Martwe zombie: ";
     private final Label text = new Label();
 
     public ZombieKilledIndicator() {
         text.setTranslateX(250);
         text.setTranslateY(15);
-        text.setFont(Font.font(null, FontWeight.BOLD, 32));
+        text.setFont(Font.font(null, FontWeight.BOLD, 20));
         text.setTextFill(Color.web("#800000"));
 
         node = text;
@@ -50,8 +50,8 @@ public class ZombieKilledIndicator extends Sprite {
         //System.out.println(bg);
         String levelup = "";
         if (pl.canLevelUp()) {
-            levelup = " NEW level! ";
+            levelup = " Nastepny poziom! ";
         }
-        text.setText(APPEND + ZombieManager.getDeadZombies() + " Player level: " + pl.getPlayerLevel() + levelup);
+        text.setText(APPEND + ZombieManager.getDeadZombies() + " Aktualny poziom: " + pl.getPlayerLevel() + levelup);
     }
 }

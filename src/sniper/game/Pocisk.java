@@ -20,7 +20,7 @@ package sniper.game;
 import javafx.geometry.Point2D;
 
 /**
- *
+ *  
  * @author Kamil Cukrowski
  */
 public abstract class Pocisk extends Sprite {

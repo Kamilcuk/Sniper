@@ -90,7 +90,6 @@ class Bron {
 
         if (timeMeasurer.runAfterTimeHasPassed((long)(shootingSpeed * player.getPlayerAttackSpeed()))) {
             wystrzelonePociski++;
-            System.out.println("pocisk" + wystrzelonePociski);
             // http://stackoverflow.com/questions/234600/can-i-use-class-newinstance-with-constructor-arguments
             // JAVA like a pro!
             final Point2D orig = player.getMiddle();

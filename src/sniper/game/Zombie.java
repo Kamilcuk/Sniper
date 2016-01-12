@@ -24,7 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
 
 /**
- *
+ *  Obiekty zombiaki.
  * @author Kamil Cukrowski
  */
 public class Zombie extends Sprite {
@@ -41,7 +41,7 @@ public class Zombie extends Sprite {
     private double hp = 100 * poziomTrudnosci;
     private double zombieAttack = 20 * poziomTrudnosci;
     private double zombieAttackSpeed = 2000 / poziomTrudnosci; //ms
-    static double poziomTrudnosci;
+    static double poziomTrudnosci = 1;
 
     public Zombie(
             final Point2D orig,

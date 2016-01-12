@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Kamil Cukrowski
+ * Copyright (C) 2016 deser
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,31 +17,40 @@
  */
 package sniper.game;
 
-import javafx.scene.control.ProgressBar;
-import javafx.scene.paint.Color;
+import javafx.geometry.Point2D;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- * Pasek życia w lewym górnym rogu.
- * @author Kamil Cukrowski
+ *
+ * @author deser
  */
-public class PlayerHpBar extends Sprite {
-
-    private final Player player;
-    private final ProgressBar progressBar = new ProgressBar();
-
-    public PlayerHpBar(Player player) {
-        this.player = player;
-        progressBar.setTranslateX(13);
-        progressBar.setStyle("-fx-accent: red"); //czerwony pasek
-        progressBar.setMinWidth(300);
-        progressBar.setTranslateX(3);
-        progressBar.setTranslateY(3);
-        node = progressBar;
+public class PociskSniperTest {
+    
+    public PociskSniperTest() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
     }
 
-    @Override
-    public void update() {
-        progressBar.setProgress(player.getPlayerHpPercentage());
+    /**
+     * Test tworzenia i odświerzania obiektu typu PociskSniper
+     */
+    @Test
+    public void testUpdate() {
+        System.out.println("update");
+        PociskSniper instance = new PociskSniper(10, 10, "0", new Point2D(1,2), 90);
+        assertEquals(10, instance.getBulletAttack(),0.0);
+        instance.update();
+        assertEquals(0, instance.getBulletAttack(),0.0);
     }
 
+    
 }
